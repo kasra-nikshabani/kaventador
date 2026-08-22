@@ -1,0 +1,335 @@
+@import "tailwindcss";
+
+/* حالت تاریک مبتنی بر کلاس (هماهنگ با next-themes) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------
+   توکن‌های طراحی — تم روشن
+   هیچ کامپوننتی نباید رنگ خام (مثل bg-gray-900) استفاده کند؛
+   همیشه از توکن‌های معنایی زیر استفاده کنید.
+--------------------------------------------------------------- */
+:root {
+  /* سطوح */
+  --background: oklch(0.992 0.002 258);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.973 0.005 258);
+  --surface-3: oklch(0.949 0.008 258);
+
+  /* متن
+     نکته کنتراست: `subtle` فقط روی `background` و `surface` مجاز است.
+     روی `surface-2` و تیره‌تر از آن، از `muted` استفاده کنید. */
+  --foreground: oklch(0.238 0.034 258);
+  --muted: oklch(0.523 0.028 258);
+  --subtle: oklch(0.556 0.024 258);
+
+  /* خطوط */
+  --border: oklch(0.919 0.008 258);
+  --border-strong: oklch(0.858 0.014 258);
+
+  /* برند — سرمه‌ای لوگو */
+  --primary: oklch(0.328 0.077 258);
+  --primary-hover: oklch(0.268 0.07 258);
+  --primary-soft: oklch(0.946 0.021 258);
+  --primary-foreground: oklch(0.995 0 0);
+
+  /* تاکید ثانویه — آبی‌خاکستری لوگو، کمی روشن‌تر برای تضاد بصری */
+  --accent: oklch(0.523 0.108 254);
+  --accent-soft: oklch(0.955 0.026 254);
+  --accent-foreground: oklch(0.298 0.078 254);
+
+  /* رنگ‌های اختصاصی لوگو */
+  --logo-ink: oklch(0.298 0.075 258);
+  --logo-accent: oklch(0.522 0.055 262);
+
+  /* وضعیت‌ها */
+  /* رنگ وضعیت‌ها عمداً تیره‌اند چون عمدتاً به عنوان «متن» روی
+     پس‌زمینه soft می‌نشینند و باید حداقل کنتراست AA را رد کنند. */
+  --success: oklch(0.508 0.132 152);
+  --success-soft: oklch(0.955 0.034 152);
+  --warning: oklch(0.536 0.121 68);
+  --warning-soft: oklch(0.963 0.045 72);
+  --danger: oklch(0.545 0.201 25);
+  --danger-soft: oklch(0.955 0.028 25);
+
+  /* تعامل */
+  --ring: oklch(0.512 0.128 254);
+  --overlay: oklch(0.21 0.028 258 / 0.45);
+}
+
+/* ---------------------------------------------------------------
+   توکن‌های طراحی — تم تاریک
+--------------------------------------------------------------- */
+.dark {
+  --background: oklch(0.176 0.022 258);
+  --surface: oklch(0.216 0.025 258);
+  --surface-2: oklch(0.252 0.028 258);
+  --surface-3: oklch(0.292 0.03 258);
+
+  --foreground: oklch(0.962 0.006 258);
+  --muted: oklch(0.702 0.022 258);
+  --subtle: oklch(0.615 0.021 258);
+
+  --border: oklch(0.296 0.028 258);
+  --border-strong: oklch(0.376 0.032 258);
+
+  /* سرمه‌ای روی پس‌زمینه تیره دیده نمی‌شود؛
+     نسخه روشن‌تر همان رنگ برند جایگزینش می‌شود. */
+  --primary: oklch(0.712 0.128 256);
+  --primary-hover: oklch(0.775 0.11 256);
+  --primary-soft: oklch(0.288 0.062 256);
+  --primary-foreground: oklch(0.166 0.025 258);
+
+  --accent: oklch(0.768 0.098 250);
+  --accent-soft: oklch(0.298 0.055 250);
+  --accent-foreground: oklch(0.952 0.022 250);
+
+  --logo-ink: oklch(0.945 0.012 258);
+  --logo-accent: oklch(0.688 0.062 258);
+
+  --success: oklch(0.706 0.142 152);
+  --success-soft: oklch(0.282 0.058 152);
+  --warning: oklch(0.782 0.142 72);
+  --warning-soft: oklch(0.298 0.058 72);
+  --danger: oklch(0.682 0.178 25);
+  --danger-soft: oklch(0.292 0.062 25);
+
+  --ring: oklch(0.752 0.118 254);
+  --overlay: oklch(0.12 0.02 258 / 0.65);
+}
+
+/* ---------------------------------------------------------------
+   اتصال توکن‌ها به Tailwind
+--------------------------------------------------------------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
+
+  --font-sans: var(--font-vazirmatn), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "Fira Code", monospace;
+
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
+
+  --shadow-soft: 0 1px 2px 0 oklch(0.21 0.028 258 / 0.04),
+    0 1px 3px 0 oklch(0.21 0.028 258 / 0.06);
+  --shadow-card: 0 2px 4px -1px oklch(0.21 0.028 258 / 0.05),
+    0 8px 20px -6px oklch(0.21 0.028 258 / 0.08);
+  --shadow-lift: 0 4px 8px -2px oklch(0.21 0.028 258 / 0.06),
+    0 16px 40px -12px oklch(0.21 0.028 258 / 0.14);
+
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------
+   استایل‌های پایه
+--------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    /* فاصله سطرِ بازتر، مناسب خوانایی متن فارسی */
+    line-height: 1.85;
+    /* عمداً از ss01 وزیرمتن استفاده نمی‌کنیم: آن ویژگی ارقام لاتین را
+       خودکار فارسی می‌کند و بلوک‌های کد و نسخه‌ها را خراب می‌کند.
+       تبدیل ارقام صریحاً در lib/utils/format.ts انجام می‌شود. */
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* اعداد و کد همیشه چپ‌به‌راست نمایش داده شوند */
+  code,
+  kbd,
+  samp,
+  pre,
+  [dir="ltr"] {
+    direction: ltr;
+    text-align: start;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+
+  ::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  ::-webkit-scrollbar {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border-strong);
+    border-radius: 9999px;
+    border: 2px solid var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--muted);
+  }
+
+  /* وقتی کشوی موبایل باز است، پس‌زمینه نباید اسکرول شود.
+     با :has بدون هیچ جاوااسکریپتی انجام می‌شود. */
+  body:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  /* احترام به تنظیم کاهش حرکت کاربر */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------
+   ابزارهای اختصاصی
+--------------------------------------------------------------- */
+
+/* متن با گرادیان برند — برای تیترهای شاخص */
+@utility text-gradient {
+  background-image: linear-gradient(
+    to left,
+    var(--primary),
+    color-mix(in oklch, var(--primary) 55%, var(--accent))
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+/* پس‌زمینه شطرنجی ظریف — حس تکنولوژیک */
+@utility bg-grid {
+  background-image: linear-gradient(to left, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+}
+
+/* کشوی ناوبری موبایل.
+   روی <dialog> سوار می‌شود تا محبوس‌سازی فوکوس، بستن با Esc و
+   غیرفعال‌شدن پس‌زمینه را مرورگر به‌صورت بومی فراهم کند. */
+@utility drawer-panel {
+  translate: -100% 0;
+  transition:
+    translate 300ms cubic-bezier(0.32, 0.72, 0, 1),
+    display 300ms allow-discrete,
+    overlay 300ms allow-discrete;
+
+  &[open] {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    &[open] {
+      translate: -100% 0;
+    }
+  }
+
+  &::backdrop {
+    background-color: var(--overlay);
+    opacity: 0;
+    transition:
+      opacity 300ms ease,
+      display 300ms allow-discrete,
+      overlay 300ms allow-discrete;
+  }
+
+  &[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    &[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+/* پرش به محتوا — فقط هنگام فوکوس با کیبورد دیده می‌شود */
+@utility skip-link {
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: -100%;
+  z-index: 100;
+  border-radius: var(--radius-lg);
+  background-color: var(--primary);
+  padding: 0.625rem 1.25rem;
+  color: var(--primary-foreground);
+  transition: top 0.2s ease;
+
+  &:focus {
+    top: 1rem;
+  }
+}
