@@ -215,17 +215,21 @@ export default async function CourseDetailPage({ params }: PageProps) {
             </Link>
           </div>
 
-          {/* آمار دوره */}
+          {/* آمار دوره.
+
+              قاعده HTML: هر <div> داخل <dl> فقط اجازه دارد <dt> و <dd>
+              داشته باشد. پس آیکون داخل خودِ <dt> می‌نشیند، نه کنارش —
+              وگرنه رابطه برچسب و مقدار برای صفحه‌خوان می‌شکند. */}
           <dl className="border-border mt-10 grid grid-cols-2 gap-5 border-t pt-8 lg:grid-cols-4">
             {stats.map((stat) => (
-              <div key={stat.label} className="flex items-center gap-3">
-                <span className="bg-primary-soft text-primary flex size-10 shrink-0 items-center justify-center rounded-xl">
-                  <stat.icon className="size-5" aria-hidden="true" />
-                </span>
-                <span>
-                  <dt className="text-muted text-xs">{stat.label}</dt>
-                  <dd className="font-bold">{stat.value}</dd>
-                </span>
+              <div key={stat.label} className="flex flex-col gap-1.5">
+                <dt className="text-muted flex items-center gap-2 text-xs">
+                  <span className="bg-primary-soft text-primary flex size-8 shrink-0 items-center justify-center rounded-lg">
+                    <stat.icon className="size-4" aria-hidden="true" />
+                  </span>
+                  {stat.label}
+                </dt>
+                <dd className="font-bold">{stat.value}</dd>
               </div>
             ))}
           </dl>
