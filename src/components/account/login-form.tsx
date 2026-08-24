@@ -3,43 +3,49 @@
 import { CircleAlert, LogIn } from "lucide-react";
 import { useActionState } from "react";
 import { Button, Field, Input } from "@/components/ui";
-import { loginAction } from "@/lib/actions/auth";
-import { LOGIN_INITIAL_STATE } from "@/lib/actions/auth.schema";
+import { loginAction } from "@/lib/actions/account";
+import { ACCOUNT_INITIAL_STATE } from "@/lib/actions/account.schema";
 
-export function LoginForm() {
+/** ورود فقط با نام کاربری و رمز عبور. */
+export function LoginForm({ next }: { next?: string }) {
   const [state, formAction, isPending] = useActionState(
     loginAction,
-    LOGIN_INITIAL_STATE,
+    ACCOUNT_INITIAL_STATE,
   );
 
   return (
     <form action={formAction} className="space-y-5" noValidate>
+      {next && <input type="hidden" name="next" value={next} />}
+
       {state.message && (
         <p
           role="alert"
-          className="text-danger bg-danger-soft flex items-center gap-2 rounded-xl px-4 py-3 text-sm"
+          className="text-danger bg-danger-soft flex items-start gap-2 rounded-xl px-4 py-3 text-sm"
         >
-          <CircleAlert className="size-4 shrink-0" aria-hidden="true" />
+          <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           {state.message}
         </p>
       )}
 
       <Field
-        label="ایمیل"
-        htmlFor="login-email"
+        label="نام کاربری"
+        htmlFor="login-username"
         required
-        error={state.errors?.email}
+        error={state.errors?.username}
       >
         <Input
-          id="login-email"
-          name="email"
-          type="email"
-          autoComplete="username"
+          id="login-username"
+          name="username"
           dir="ltr"
-          placeholder="admin@kaventador.ir"
-          defaultValue={state.values?.email}
-          invalid={Boolean(state.errors?.email)}
-          aria-describedby={state.errors?.email ? "login-email-error" : undefined}
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck={false}
+          placeholder="username"
+          defaultValue={state.values?.username}
+          invalid={Boolean(state.errors?.username)}
+          aria-describedby={
+            state.errors?.username ? "login-username-error" : undefined
+          }
         />
       </Field>
 
@@ -53,8 +59,8 @@ export function LoginForm() {
           id="login-password"
           name="password"
           type="password"
-          autoComplete="current-password"
           dir="ltr"
+          autoComplete="current-password"
           placeholder="••••••••"
           invalid={Boolean(state.errors?.password)}
           aria-describedby={
@@ -65,7 +71,7 @@ export function LoginForm() {
 
       <Button type="submit" size="lg" fullWidth disabled={isPending}>
         <LogIn aria-hidden="true" />
-        {isPending ? "در حال ورود…" : "ورود به پنل"}
+        {isPending ? "در حال ورود…" : "ورود"}
       </Button>
     </form>
   );

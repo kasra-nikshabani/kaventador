@@ -62,6 +62,7 @@ export async function getCourses(
       return false;
     if (options.level && course.level !== options.level) return false;
     if (options.progress && course.progress !== options.progress) return false;
+    if (options.pricing && course.pricing.type !== options.pricing) return false;
     if (options.featuredOnly && !course.isFeatured) return false;
 
     return matchesSearch(

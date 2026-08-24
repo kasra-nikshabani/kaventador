@@ -94,6 +94,9 @@ export const courseFormSchema = z.object({
     message: "سطح معتبر نیست.",
   }),
   status: statusEnum,
+  pricingType: z.enum(["free", "paid"], { message: "نوع قیمت معتبر نیست." }),
+  priceAmount: z.string().trim().optional(),
+  priceOriginal: z.string().trim().optional(),
   progress: z.enum(["upcoming", "ongoing", "completed"], {
     message: "وضعیت برگزاری معتبر نیست.",
   }),
@@ -108,7 +111,33 @@ export const courseFormSchema = z.object({
   prerequisites: listFromText,
   outcomes: listFromText,
   tags: listFromText,
-});
+})
+  /* «نوع» و «مبلغ» با هم معنا دارند: دوره پولی بدون مبلغ بی‌معناست و
+     مبلغ تخفیف‌خورده باید کمتر از مبلغ اصلی باشد. */
+  .superRefine((data, ctx) => {
+    if (data.pricingType !== "paid") return;
+
+    const amount = Number(data.priceAmount);
+    if (!data.priceAmount || !Number.isFinite(amount) || amount <= 0) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["priceAmount"],
+        message: "برای دوره پولی، مبلغ را وارد کنید.",
+      });
+      return;
+    }
+
+    if (!data.priceOriginal) return;
+
+    const original = Number(data.priceOriginal);
+    if (!Number.isFinite(original) || original <= amount) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["priceOriginal"],
+        message: "مبلغ پیش از تخفیف باید بیشتر از مبلغ فعلی باشد.",
+      });
+    }
+  });
 
 export const userFormSchema = z.object({
   name: requiredText("نام", 3, 80),

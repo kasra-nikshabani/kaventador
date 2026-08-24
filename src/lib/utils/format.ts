@@ -103,3 +103,20 @@ export function truncate(text: string, maxLength: number): string {
   const lastSpace = sliced.lastIndexOf(" ");
   return `${lastSpace > 0 ? sliced.slice(0, lastSpace) : sliced}…`;
 }
+
+const PRICE_FORMATTER = new Intl.NumberFormat("fa-IR");
+
+/**
+ * قیمت به تومان. مثال: ۴۹۰٬۰۰۰ تومان
+ *
+ * واحد عمداً بخشی از خروجی است تا هیچ‌جا عدد لخت و بی‌واحد رندر نشود.
+ */
+export function formatPrice(amountToman: number): string {
+  return `${PRICE_FORMATTER.format(amountToman)} تومان`;
+}
+
+/** درصد تخفیف از روی دو مبلغ. مثال: ۳۰٪ */
+export function formatDiscount(original: number, current: number): string {
+  const percent = Math.round(((original - current) / original) * 100);
+  return `${toPersianDigits(percent)}٪`;
+}

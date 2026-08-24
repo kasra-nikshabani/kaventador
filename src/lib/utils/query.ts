@@ -7,6 +7,7 @@ const LEVELS: Level[] = ["beginner", "intermediate", "advanced"];
 const SORTS: SortOption[] = ["newest", "oldest", "popular", "rating", "title"];
 const STATUSES: ContentStatus[] = ["draft", "published", "archived"];
 const PROGRESS: QueryOptions["progress"][] = ["upcoming", "ongoing", "completed"];
+const PRICING: QueryOptions["pricing"][] = ["free", "paid"];
 
 function first(value: string | string[] | undefined): string | undefined {
   const raw = Array.isArray(value) ? value[0] : value;
@@ -27,6 +28,7 @@ export function parseQueryParams(
   const sort = first(searchParams.sort);
   const status = first(searchParams.status);
   const progress = first(searchParams.progress);
+  const pricing = first(searchParams.pricing);
   const page = Number.parseInt(first(searchParams.page) ?? "1", 10);
 
   return {
@@ -38,6 +40,9 @@ export function parseQueryParams(
     level: LEVELS.includes(level as Level) ? (level as Level) : undefined,
     progress: PROGRESS.includes(progress as QueryOptions["progress"])
       ? (progress as QueryOptions["progress"])
+      : undefined,
+    pricing: PRICING.includes(pricing as QueryOptions["pricing"])
+      ? (pricing as QueryOptions["pricing"])
       : undefined,
     sort: SORTS.includes(sort as SortOption) ? (sort as SortOption) : "newest",
     status: STATUSES.includes(status as ContentStatus)

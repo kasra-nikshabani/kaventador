@@ -4,6 +4,8 @@ import {
   CircleCheck,
   Clock,
   FolderGit2,
+  PlayCircle,
+  ShoppingCart,
   Signal,
   Star,
   Users,
@@ -13,6 +15,7 @@ import { notFound } from "next/navigation";
 import {
   CourseCard,
   CourseCover,
+  CoursePrice,
   CourseProgressBadge,
   Curriculum,
 } from "@/components/course";
@@ -22,7 +25,8 @@ import {
   PersonCard,
   SectionHeading,
 } from "@/components/shared";
-import { Badge, Card, Container } from "@/components/ui";
+import Link from "next/link";
+import { Badge, buttonStyles, Card, Container } from "@/components/ui";
 import { breadcrumbJsonLd, courseJsonLd } from "@/lib/seo/json-ld";
 import {
   getAllCourseSlugs,
@@ -129,7 +133,6 @@ export default async function CourseDetailPage({ params }: PageProps) {
               <div className="mb-4 flex flex-wrap items-center gap-2">
                 <Badge variant="primary">{course.category.title}</Badge>
                 <Badge variant="outline">{LEVEL_LABELS[course.level]}</Badge>
-                <Badge variant="success">رایگان</Badge>
                 <CourseProgressBadge progress={course.progress} />
               </div>
 
@@ -177,6 +180,39 @@ export default async function CourseDetailPage({ params }: PageProps) {
                 className="rounded-2xl"
               />
             </div>
+          </div>
+
+          {/* قیمت و دکمه اقدام */}
+          <div className="border-border bg-background mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5">
+            <div>
+              <p className="text-muted mb-1.5 text-sm">
+                {course.pricing.type === "free"
+                  ? "این دوره کاملاً رایگان است"
+                  : "دسترسی مادام‌العمر به همه درس‌ها"}
+              </p>
+              <CoursePrice pricing={course.pricing} size="detail" />
+            </div>
+
+            <Link
+              href={
+                course.pricing.type === "free"
+                  ? `#curriculum-heading`
+                  : `/courses/${course.slug}/enroll`
+              }
+              className={buttonStyles({ size: "lg" })}
+            >
+              {course.pricing.type === "free" ? (
+                <>
+                  <PlayCircle aria-hidden="true" />
+                  شروع رایگان دوره
+                </>
+              ) : (
+                <>
+                  <ShoppingCart aria-hidden="true" />
+                  ثبت‌نام در دوره
+                </>
+              )}
+            </Link>
           </div>
 
           {/* آمار دوره */}

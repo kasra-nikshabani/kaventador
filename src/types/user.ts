@@ -20,7 +20,14 @@ export const USER_STATUS_LABELS: Record<UserStatus, string> = {
 export interface User {
   id: ID;
   name: string;
+  /** نام کاربری یکتا — ورود با همین انجام می‌شود، نه با ایمیل. */
+  username: string;
   email: string;
+  /**
+   * رمز عبور هش‌شده با scrypt.
+   * هرگز به کلاینت فرستاده نمی‌شود؛ لایه سرویس آن را حذف می‌کند.
+   */
+  passwordHash: string;
   avatar?: string;
   role: UserRole;
   status: UserStatus;

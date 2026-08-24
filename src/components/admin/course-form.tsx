@@ -194,6 +194,77 @@ export function CourseForm({ categories, people, course }: CourseFormProps) {
           </Field>
         </div>
 
+        {/* قیمت‌گذاری */}
+        <fieldset className="border-border space-y-5 rounded-xl border p-5">
+          <legend className="px-2 text-sm font-bold">قیمت‌گذاری</legend>
+
+          <div className="grid gap-5 sm:grid-cols-3">
+            <Field
+              label="نوع"
+              htmlFor="course-pricing-type"
+              required
+              error={state.errors?.pricingType}
+            >
+              <Select
+                id="course-pricing-type"
+                name="pricingType"
+                defaultValue={text("pricingType", course?.pricing.type ?? "free")}
+              >
+                <option value="free">رایگان</option>
+                <option value="paid">پولی</option>
+              </Select>
+            </Field>
+
+            <Field
+              label="مبلغ (تومان)"
+              htmlFor="course-price-amount"
+              hint="فقط برای دوره پولی."
+              error={state.errors?.priceAmount}
+            >
+              <Input
+                id="course-price-amount"
+                name="priceAmount"
+                type="number"
+                min={0}
+                step={1000}
+                dir="ltr"
+                placeholder="490000"
+                defaultValue={
+                  state.values?.priceAmount ??
+                  (course?.pricing.type === "paid"
+                    ? String(course.pricing.amount)
+                    : "")
+                }
+                invalid={Boolean(state.errors?.priceAmount)}
+              />
+            </Field>
+
+            <Field
+              label="مبلغ پیش از تخفیف"
+              htmlFor="course-price-original"
+              hint="اختیاری؛ خط‌خورده کنار قیمت می‌آید."
+              error={state.errors?.priceOriginal}
+            >
+              <Input
+                id="course-price-original"
+                name="priceOriginal"
+                type="number"
+                min={0}
+                step={1000}
+                dir="ltr"
+                placeholder="690000"
+                defaultValue={
+                  state.values?.priceOriginal ??
+                  (course?.pricing.type === "paid" && course.pricing.originalAmount
+                    ? String(course.pricing.originalAmount)
+                    : "")
+                }
+                invalid={Boolean(state.errors?.priceOriginal)}
+              />
+            </Field>
+          </div>
+        </fieldset>
+
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="وضعیت برگزاری"

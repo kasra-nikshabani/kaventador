@@ -80,6 +80,24 @@ export async function findUserById(id: string): Promise<User | null> {
   return user ? structuredClone(user) : null;
 }
 
+/** جستجوی نام کاربری — بدون حساسیت به حروف بزرگ و کوچک. */
+export async function findUserByUsername(
+  username: string,
+): Promise<User | null> {
+  const needle = username.trim().toLowerCase();
+  const user = store.users.find(
+    (item) => item.username.toLowerCase() === needle,
+  );
+  return user ? structuredClone(user) : null;
+}
+
+/** بررسی یکتایی ایمیل هنگام ثبت‌نام. */
+export async function findUserByEmail(email: string): Promise<User | null> {
+  const needle = email.trim().toLowerCase();
+  const user = store.users.find((item) => item.email.toLowerCase() === needle);
+  return user ? structuredClone(user) : null;
+}
+
 /* ---------------------------------------------------------------
    نوشتن
 --------------------------------------------------------------- */
@@ -156,6 +174,11 @@ export async function removeCategory(id: string): Promise<boolean> {
   return true;
 }
 
+export async function insertUser(user: User): Promise<User> {
+  store.users.push(structuredClone(user));
+  return structuredClone(user);
+}
+
 export async function patchUser(
   id: string,
   changes: Partial<User>,
@@ -182,3 +205,48 @@ export async function countCategoryUsage(categoryId: string): Promise<number> {
     store.articles.filter((item) => item.categoryId === categoryId).length
   );
 }
+
+/* ---------------------------------------------------------------
+   گره‌زدن به قرارداد
+
+   این شیء صرفاً برای بررسی نوع نیست؛ نقطه تزریق هم هست. اگر روزی
+   پیاده‌سازی Prisma اضافه شود، سرویس‌ها می‌توانند به‌جای ایمپورت
+   مستقیم توابع، همین شیء را از یک کارخانه بگیرند.
+
+   `satisfies` باعث می‌شود هر امضای جاافتاده یا ناسازگار، همان لحظه
+   خطای کامپایل بدهد.
+--------------------------------------------------------------- */
+
+import type { ContentRepository } from "@/lib/repositories/contracts";
+
+export const mockContentRepository = {
+  findAllCourses,
+  findCourseBySlug,
+  findCourseById,
+  findAllArticles,
+  findArticleBySlug,
+  findArticleById,
+  findAllCategories,
+  findCategoryBySlug,
+  findCategoryById,
+  findAllPeople,
+  findPersonById,
+  findAllUsers,
+  findUserById,
+  findUserByUsername,
+  findUserByEmail,
+  insertUser,
+  insertCourse,
+  patchCourse,
+  removeCourse,
+  insertArticle,
+  patchArticle,
+  removeArticle,
+  insertCategory,
+  patchCategory,
+  removeCategory,
+  patchUser,
+  removeUser,
+  countCategoryUsage,
+  nextId,
+} satisfies ContentRepository;

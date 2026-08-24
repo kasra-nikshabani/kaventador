@@ -65,9 +65,12 @@ export function courseJsonLd(course: CourseWithRelations) {
     },
     offers: {
       "@type": "Offer",
-      price: 0,
+      /* واحد داده تومان است ولی واحد رسمی ISO ریال؛ ضرب در ۱۰ لازم است
+         وگرنه گوگل قیمت را ده برابر کمتر می‌فهمد. */
+      price:
+        course.pricing.type === "paid" ? course.pricing.amount * 10 : 0,
       priceCurrency: "IRR",
-      category: "Free",
+      category: course.pricing.type === "free" ? "Free" : "Paid",
       availability: "https://schema.org/InStock",
     },
     hasCourseInstance: {

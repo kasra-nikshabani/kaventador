@@ -1,6 +1,7 @@
 import { BookOpen, Clock, Star, Users } from "lucide-react";
 import Link from "next/link";
 import { CourseCover } from "@/components/course/course-cover";
+import { CoursePrice } from "@/components/course/course-price";
 import { CourseProgressBadge } from "@/components/course/course-progress-badge";
 import { Badge, Card } from "@/components/ui";
 import {
@@ -64,8 +65,8 @@ export function CourseCard({ course, headingLevel: Heading = "h3" }: CourseCardP
           </span>
         </div>
 
-        <div className="border-border mt-4 flex items-center justify-between border-t pt-4">
-          <span className="text-muted text-xs">{course.instructor.name}</span>
+        <div className="border-border mt-4 flex flex-wrap items-center justify-between gap-2 border-t pt-4">
+          <CoursePrice pricing={course.pricing} />
           <span className="text-foreground flex items-center gap-1 text-xs font-bold">
             <Star
               className="text-warning size-3.5 fill-current"

@@ -15,7 +15,7 @@ import { parseQueryParams, type RawSearchParams } from "@/lib/utils/query";
 export const metadata: Metadata = {
   title: "دوره‌ها",
   description:
-    "فهرست کامل دوره‌های پروژه‌محور کاوِنتادور در جاوا، اسپرینگ، جاوااسکریپت، ری‌اکت و نکست‌جی‌اس. همه دوره‌ها رایگان.",
+    "فهرست کامل دوره‌های پروژه‌محور کاوِنتادور در جاوا، اسپرینگ، جاوااسکریپت، ری‌اکت و نکست‌جی‌اس؛ رایگان و پولی، با سرفصل و قیمت شفاف.",
   alternates: { canonical: "/courses" },
 };
 
@@ -46,6 +46,7 @@ export default async function CoursesPage({
           resultLabel={`${formatNumber(result.total)} دوره`}
           showLevel
           showProgress
+          showPricing
           sortOptions={["newest", "popular", "rating", "title"]}
           searchPlaceholder="جستجو در دوره‌ها…"
           searchLabel="جستجو در دوره‌ها"

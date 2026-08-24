@@ -25,6 +25,8 @@ export interface ContentFiltersProps {
   showLevel?: boolean;
   /** فیلتر وضعیت برگزاری — فقط برای دوره‌ها. */
   showProgress?: boolean;
+  /** فیلتر رایگان/پولی — فقط برای دوره‌ها. */
+  showPricing?: boolean;
   sortOptions: readonly SortOption[];
   searchPlaceholder: string;
   searchLabel: string;
@@ -42,6 +44,7 @@ export function ContentFilters({
   resultLabel,
   showLevel = false,
   showProgress = false,
+  showPricing = false,
   sortOptions,
   searchPlaceholder,
   searchLabel,
@@ -54,6 +57,7 @@ export function ContentFilters({
   const currentCategory = searchParams.get("category") ?? "";
   const currentLevel = searchParams.get("level") ?? "";
   const currentProgress = searchParams.get("progress") ?? "";
+  const currentPricing = searchParams.get("pricing") ?? "";
   const currentSort = searchParams.get("sort") ?? sortOptions[0];
   const currentSearch = searchParams.get("q") ?? "";
   const currentTag = searchParams.get("tag") ?? "";
@@ -62,6 +66,7 @@ export function ContentFilters({
     currentCategory ||
       currentLevel ||
       currentProgress ||
+      currentPricing ||
       currentSearch ||
       currentTag ||
       searchParams.get("sort"),
@@ -170,6 +175,24 @@ export function ContentFilters({
                   {COURSE_PROGRESS_LABELS[value]}
                 </option>
               ))}
+            </Select>
+          </>
+        )}
+
+        {showPricing && (
+          <>
+            <label className="sr-only" htmlFor="filter-pricing">
+              فیلتر قیمت
+            </label>
+            <Select
+              id="filter-pricing"
+              value={currentPricing}
+              onChange={(event) => apply({ pricing: event.target.value })}
+              className="w-auto min-w-32"
+            >
+              <option value="">رایگان و پولی</option>
+              <option value="free">فقط رایگان</option>
+              <option value="paid">فقط پولی</option>
             </Select>
           </>
         )}

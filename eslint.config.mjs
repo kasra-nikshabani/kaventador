@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // کلاینت تولیدشده Prisma — ما ننوشته‌ایمش، پس بررسی هم نمی‌کنیم.
+    "src/generated/**",
   ]),
 ]);
 

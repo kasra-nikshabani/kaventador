@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getSession } from "@/lib/auth/session";
+import { getAdminSession } from "@/lib/auth/session";
 import {
   ALLOWED_VIDEO_TYPES,
   MAX_VIDEO_BYTES,
@@ -16,7 +16,7 @@ import {
  * می‌بیند و این مسیر زیر `/api` است.
  */
 export async function POST(request: NextRequest) {
-  const session = await getSession();
+  const session = await getAdminSession();
   if (!session) {
     return NextResponse.json({ error: "دسترسی ندارید." }, { status: 401 });
   }

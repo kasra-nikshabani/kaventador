@@ -8,7 +8,7 @@ import {
   type CurriculumState,
 } from "@/lib/actions/curriculum.schema";
 import { collectErrors } from "@/lib/actions/content.schema";
-import { getSession } from "@/lib/auth/session";
+import { getAdminSession } from "@/lib/auth/session";
 import { deleteStoredFile } from "@/lib/media/storage";
 import {
   findLessonVideo,
@@ -24,8 +24,8 @@ import {
 
 /** هر اکشن نشست را خودش بررسی می‌کند؛ proxy اکشن‌ها را نمی‌بیند. */
 async function requireSession(): Promise<void> {
-  const session = await getSession();
-  if (!session) redirect("/admin/login");
+  const session = await getAdminSession();
+  if (!session) redirect("/login?next=%2Fadmin");
 }
 
 function revalidateCourse(courseId: string) {

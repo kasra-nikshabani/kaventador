@@ -1,11 +1,24 @@
 import type { User } from "@/types";
 
-/** کاربران پلتفرم — در پنل ادمین مدیریت می‌شوند. */
+/**
+ * کاربران پلتفرم.
+ *
+ * فقط هش رمز (scrypt) ذخیره می‌شود، نه متن ساده.
+ *
+ * ⚠️ رمز حساب مدیر عمداً در هیچ کامنتی نوشته نشده — این فایل در مخزن
+ * گیت است. برای محیط تولید، رمز را از متغیر `ADMIN_PASSWORD` بدهید و
+ * این هش را جایگزین کنید؛ هشِ داخل مخزن برای هر کسی که مخزن را ببیند
+ * قابل حمله آفلاین است.
+ *
+ * حساب‌های دانشجوی نمونه رمز یکسان دارند و فقط برای پرکردن جدول‌اند.
+ */
 export const usersMock: User[] = [
   {
     id: "user-1",
     name: "کسری نیک‌شعبانی",
+    username: "admin",
     email: "kasra@kaventador.ir",
+    passwordHash: "scrypt$16384$c457e3c1566cb942703d37a22d099829$f146250251430686c50a029859a34cb57c723ac6faaac94bc361fb02e4830b457edac7f615bc63631e40602dd619808056ba5c1d852a8bfec4d003b9d7a200b6",
     avatar: "/images/founder/avatar.jpg",
     role: "admin",
     status: "active",
@@ -16,7 +29,9 @@ export const usersMock: User[] = [
   {
     id: "user-2",
     name: "مریم احمدی",
+    username: "maryam",
     email: "maryam.ahmadi@example.com",
+    passwordHash: "scrypt$16384$330d7e8a4241d8dc44399348fbf0a21f$87c26c08d6c1bd0f22c8197c07de1dfca8f3ed5b69ec6dc3cf1f77a1752cf0c52a65cf30cb15746ed9a3eba1eaa7e42681179a2656416ba6d65c0e9a3f462254",
     role: "student",
     status: "active",
     joinedAt: "2026-01-18",
@@ -26,7 +41,9 @@ export const usersMock: User[] = [
   {
     id: "user-3",
     name: "امیرحسین رضایی",
+    username: "amirhossein",
     email: "amirhossein.r@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "student",
     status: "active",
     joinedAt: "2026-02-03",
@@ -36,7 +53,9 @@ export const usersMock: User[] = [
   {
     id: "user-4",
     name: "زهرا کریمی",
+    username: "zahra",
     email: "zahra.karimi@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "instructor",
     status: "active",
     joinedAt: "2026-02-27",
@@ -46,7 +65,9 @@ export const usersMock: User[] = [
   {
     id: "user-5",
     name: "محمد صادقی",
+    username: "mohammad",
     email: "m.sadeghi@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "student",
     status: "inactive",
     joinedAt: "2026-03-14",
@@ -56,7 +77,9 @@ export const usersMock: User[] = [
   {
     id: "user-6",
     name: "فاطمه حسینی",
+    username: "fateme",
     email: "fateme.hosseini@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "student",
     status: "active",
     joinedAt: "2026-04-09",
@@ -70,7 +93,9 @@ export const usersMock: User[] = [
   {
     id: "user-7",
     name: "علی موسوی",
+    username: "ali",
     email: "ali.mousavi@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "student",
     status: "banned",
     joinedAt: "2026-04-22",
@@ -80,7 +105,9 @@ export const usersMock: User[] = [
   {
     id: "user-8",
     name: "نگار شریفی",
+    username: "negar",
     email: "negar.sharifi@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "instructor",
     status: "active",
     joinedAt: "2026-05-06",
@@ -90,7 +117,9 @@ export const usersMock: User[] = [
   {
     id: "user-9",
     name: "رضا جعفری",
+    username: "reza",
     email: "reza.jafari@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "student",
     status: "active",
     joinedAt: "2026-05-30",
@@ -100,7 +129,9 @@ export const usersMock: User[] = [
   {
     id: "user-10",
     name: "سمیرا نوری",
+    username: "samira",
     email: "samira.nouri@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "student",
     status: "active",
     joinedAt: "2026-06-17",
@@ -110,7 +141,9 @@ export const usersMock: User[] = [
   {
     id: "user-11",
     name: "حسین قاسمی",
+    username: "hossein",
     email: "hossein.ghasemi@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "student",
     status: "active",
     joinedAt: "2026-07-02",
@@ -120,7 +153,9 @@ export const usersMock: User[] = [
   {
     id: "user-12",
     name: "الهام رحیمی",
+    username: "elham",
     email: "elham.rahimi@example.com",
+    passwordHash: "scrypt$16384$4c756c80078832c3041d1eb87e419eaf$58d3bc0ab21776b02a2bd0c53ff7688c119558832e8382ffaa47e527d6041a2a9885f2882e2c81c45cd1eff0bf86b55fab77d3d7eb5dc7822599d6fad52e6bdf",
     role: "student",
     status: "inactive",
     joinedAt: "2026-07-25",

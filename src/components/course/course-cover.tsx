@@ -54,7 +54,7 @@ export function CourseCover({
       <span
         dir="ltr"
         /* اینجا پس‌زمینه surface-2 است، پس muted لازم است نه subtle. */
-        className="text-muted absolute bottom-3 end-4 text-xs font-bold tracking-widest uppercase"
+        className="text-muted absolute bottom-3 end-4 font-mono text-xs tracking-widest uppercase"
       >
         {titleEn}
       </span>

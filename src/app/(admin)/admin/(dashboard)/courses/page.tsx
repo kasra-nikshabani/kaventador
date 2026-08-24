@@ -5,7 +5,7 @@ import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminSearch } from "@/components/admin/admin-search";
 import { DataTable } from "@/components/admin/data-table";
 import { DeleteButton } from "@/components/admin/delete-button";
-import { CourseProgressBadge } from "@/components/course";
+import { CoursePrice, CourseProgressBadge } from "@/components/course";
 import { Badge, buttonStyles, EmptyState, Pagination } from "@/components/ui";
 import { deleteCourseAction } from "@/lib/actions/content";
 import { findAllCategories, findAllCourses } from "@/lib/repositories";
@@ -49,6 +49,7 @@ export default async function AdminCoursesPage({
     if (query.status && course.status !== query.status) return false;
     if (query.level && course.level !== query.level) return false;
     if (query.progress && course.progress !== query.progress) return false;
+    if (query.pricing && course.pricing.type !== query.pricing) return false;
     return matchesSearch(query.search, course.title, course.titleEn, course.slug);
   });
 
@@ -79,6 +80,15 @@ export default async function AdminCoursesPage({
               value: s,
               label: CONTENT_STATUS_LABELS[s],
             })),
+          },
+          {
+            name: "pricing",
+            label: "فیلتر قیمت",
+            placeholder: "رایگان و پولی",
+            options: [
+              { value: "free", label: "رایگان" },
+              { value: "paid", label: "پولی" },
+            ],
           },
           {
             name: "progress",
@@ -123,7 +133,7 @@ export default async function AdminCoursesPage({
             cell: (row) => (
               <span>
                 <span className="block font-medium">{row.title}</span>
-                <span className="text-subtle block text-xs" dir="ltr">
+                <span className="code-chip mt-1">
                   {row.slug}
                 </span>
               </span>
@@ -155,6 +165,12 @@ export default async function AdminCoursesPage({
             header: "برگزاری",
             hideBelow: "md",
             cell: (row) => <CourseProgressBadge progress={row.progress} />,
+          },
+          {
+            key: "pricing",
+            header: "قیمت",
+            hideBelow: "sm",
+            cell: (row) => <CoursePrice pricing={row.pricing} />,
           },
           {
             key: "students",

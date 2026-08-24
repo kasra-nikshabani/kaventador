@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { siteConfig } from "@/config/site";
-import { vazirmatn } from "@/lib/fonts";
+import { jetbrainsMono, vazirmatn } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#16161f" },
+    { media: "(prefers-color-scheme: light)", color: "#fbfdfd" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d1417" },
   ],
   colorScheme: "light dark",
 };
@@ -59,7 +59,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <body className={`${vazirmatn.variable} font-sans antialiased`}>
+      <body
+        className={`${vazirmatn.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+      >
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

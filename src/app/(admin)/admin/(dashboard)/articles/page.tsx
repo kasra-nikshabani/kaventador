@@ -110,7 +110,7 @@ export default async function AdminArticlesPage({
             cell: (row) => (
               <span>
                 <span className="block font-medium">{row.title}</span>
-                <span className="text-subtle block text-xs" dir="ltr">
+                <span className="code-chip mt-1">
                   {row.slug}
                 </span>
               </span>

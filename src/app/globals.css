@@ -5,96 +5,100 @@
 
 /* ---------------------------------------------------------------
    توکن‌های طراحی — تم روشن
+
+   تم تاریک، تمِ طراحی‌شده این سایت است؛ تم روشن نسخه جایگزین آن است.
+   هر دو با یک هیو پایه (فیروزه‌ای) ساخته شده‌اند تا حس ترمینال در هر
+   دو حالت حفظ شود.
+
    هیچ کامپوننتی نباید رنگ خام (مثل bg-gray-900) استفاده کند؛
    همیشه از توکن‌های معنایی زیر استفاده کنید.
 --------------------------------------------------------------- */
 :root {
   /* سطوح */
-  --background: oklch(0.992 0.002 258);
+  --background: oklch(0.988 0.004 195);
   --surface: oklch(1 0 0);
-  --surface-2: oklch(0.973 0.005 258);
-  --surface-3: oklch(0.949 0.008 258);
+  --surface-2: oklch(0.966 0.008 195);
+  --surface-3: oklch(0.938 0.012 195);
 
   /* متن
      نکته کنتراست: `subtle` فقط روی `background` و `surface` مجاز است.
      روی `surface-2` و تیره‌تر از آن، از `muted` استفاده کنید. */
-  --foreground: oklch(0.238 0.034 258);
-  --muted: oklch(0.523 0.028 258);
-  --subtle: oklch(0.556 0.024 258);
+  --foreground: oklch(0.205 0.026 195);
+  --muted: oklch(0.502 0.03 195);
+  --subtle: oklch(0.538 0.028 195);
 
   /* خطوط */
-  --border: oklch(0.919 0.008 258);
-  --border-strong: oklch(0.858 0.014 258);
+  --border: oklch(0.908 0.012 195);
+  --border-strong: oklch(0.846 0.018 195);
 
-  /* برند — سرمه‌ای لوگو */
-  --primary: oklch(0.328 0.077 258);
-  --primary-hover: oklch(0.268 0.07 258);
-  --primary-soft: oklch(0.946 0.021 258);
+  /* برند — فیروزه‌ای ترمینال */
+  --primary: oklch(0.472 0.108 172);
+  --primary-hover: oklch(0.412 0.098 172);
+  --primary-soft: oklch(0.944 0.032 172);
   --primary-foreground: oklch(0.995 0 0);
 
-  /* تاکید ثانویه — آبی‌خاکستری لوگو، کمی روشن‌تر برای تضاد بصری */
-  --accent: oklch(0.523 0.108 254);
-  --accent-soft: oklch(0.955 0.026 254);
-  --accent-foreground: oklch(0.298 0.078 254);
+  /* تاکید ثانویه — آبی سایان */
+  --accent: oklch(0.492 0.106 218);
+  --accent-soft: oklch(0.948 0.028 218);
+  --accent-foreground: oklch(0.272 0.072 218);
 
   /* رنگ‌های اختصاصی لوگو */
-  --logo-ink: oklch(0.298 0.075 258);
-  --logo-accent: oklch(0.522 0.055 262);
+  --logo-ink: oklch(0.248 0.038 195);
+  --logo-accent: oklch(0.472 0.108 172);
 
-  /* وضعیت‌ها */
-  /* رنگ وضعیت‌ها عمداً تیره‌اند چون عمدتاً به عنوان «متن» روی
-     پس‌زمینه soft می‌نشینند و باید حداقل کنتراست AA را رد کنند. */
-  --success: oklch(0.508 0.132 152);
-  --success-soft: oklch(0.955 0.034 152);
-  --warning: oklch(0.536 0.121 68);
-  --warning-soft: oklch(0.963 0.045 72);
-  --danger: oklch(0.545 0.201 25);
-  --danger-soft: oklch(0.955 0.028 25);
+  /* وضعیت‌ها
+     عمداً تیره‌اند چون عمدتاً به عنوان «متن» روی پس‌زمینه soft
+     می‌نشینند و باید حداقل کنتراست AA را رد کنند. */
+  --success: oklch(0.492 0.122 152);
+  --success-soft: oklch(0.952 0.034 152);
+  --warning: oklch(0.532 0.118 68);
+  --warning-soft: oklch(0.962 0.045 72);
+  --danger: oklch(0.542 0.198 25);
+  --danger-soft: oklch(0.954 0.028 25);
 
   /* تعامل */
-  --ring: oklch(0.512 0.128 254);
-  --overlay: oklch(0.21 0.028 258 / 0.45);
+  --ring: oklch(0.472 0.108 172);
+  --overlay: oklch(0.14 0.02 195 / 0.55);
 }
 
 /* ---------------------------------------------------------------
-   توکن‌های طراحی — تم تاریک
+   توکن‌های طراحی — تم تاریک (پیش‌فرض سایت)
 --------------------------------------------------------------- */
 .dark {
-  --background: oklch(0.176 0.022 258);
-  --surface: oklch(0.216 0.025 258);
-  --surface-2: oklch(0.252 0.028 258);
-  --surface-3: oklch(0.292 0.03 258);
+  --background: oklch(0.152 0.014 195);
+  --surface: oklch(0.192 0.017 195);
+  --surface-2: oklch(0.234 0.02 195);
+  --surface-3: oklch(0.278 0.022 195);
 
-  --foreground: oklch(0.962 0.006 258);
-  --muted: oklch(0.702 0.022 258);
-  --subtle: oklch(0.615 0.021 258);
+  --foreground: oklch(0.958 0.008 195);
+  --muted: oklch(0.706 0.024 195);
+  --subtle: oklch(0.618 0.024 195);
 
-  --border: oklch(0.296 0.028 258);
-  --border-strong: oklch(0.376 0.032 258);
+  --border: oklch(0.288 0.024 195);
+  --border-strong: oklch(0.372 0.03 195);
 
-  /* سرمه‌ای روی پس‌زمینه تیره دیده نمی‌شود؛
-     نسخه روشن‌تر همان رنگ برند جایگزینش می‌شود. */
-  --primary: oklch(0.712 0.128 256);
-  --primary-hover: oklch(0.775 0.11 256);
-  --primary-soft: oklch(0.288 0.062 256);
-  --primary-foreground: oklch(0.166 0.025 258);
+  /* روی زمینه تیره، فیروزه‌ای روشن می‌شود — همان سبزآبی ترمینال. */
+  --primary: oklch(0.802 0.142 172);
+  --primary-hover: oklch(0.862 0.122 172);
+  --primary-soft: oklch(0.276 0.058 172);
+  --primary-foreground: oklch(0.148 0.03 172);
 
-  --accent: oklch(0.768 0.098 250);
-  --accent-soft: oklch(0.298 0.055 250);
-  --accent-foreground: oklch(0.952 0.022 250);
+  --accent: oklch(0.762 0.118 218);
+  --accent-soft: oklch(0.282 0.052 218);
+  --accent-foreground: oklch(0.944 0.028 218);
 
-  --logo-ink: oklch(0.945 0.012 258);
-  --logo-accent: oklch(0.688 0.062 258);
+  --logo-ink: oklch(0.958 0.008 195);
+  --logo-accent: oklch(0.802 0.142 172);
 
-  --success: oklch(0.706 0.142 152);
-  --success-soft: oklch(0.282 0.058 152);
-  --warning: oklch(0.782 0.142 72);
-  --warning-soft: oklch(0.298 0.058 72);
-  --danger: oklch(0.682 0.178 25);
-  --danger-soft: oklch(0.292 0.062 25);
+  --success: oklch(0.742 0.148 152);
+  --success-soft: oklch(0.278 0.058 152);
+  --warning: oklch(0.792 0.142 72);
+  --warning-soft: oklch(0.294 0.058 72);
+  --danger: oklch(0.692 0.178 25);
+  --danger-soft: oklch(0.288 0.062 25);
 
-  --ring: oklch(0.752 0.118 254);
-  --overlay: oklch(0.12 0.02 258 / 0.65);
+  --ring: oklch(0.802 0.142 172);
+  --overlay: oklch(0.09 0.015 195 / 0.7);
 }
 
 /* ---------------------------------------------------------------
@@ -133,19 +137,19 @@
   --color-overlay: var(--overlay);
 
   --font-sans: var(--font-vazirmatn), system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: ui-monospace, "JetBrains Mono", "Fira Code", monospace;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
   --radius-3xl: 1.75rem;
 
-  --shadow-soft: 0 1px 2px 0 oklch(0.21 0.028 258 / 0.04),
-    0 1px 3px 0 oklch(0.21 0.028 258 / 0.06);
-  --shadow-card: 0 2px 4px -1px oklch(0.21 0.028 258 / 0.05),
-    0 8px 20px -6px oklch(0.21 0.028 258 / 0.08);
-  --shadow-lift: 0 4px 8px -2px oklch(0.21 0.028 258 / 0.06),
-    0 16px 40px -12px oklch(0.21 0.028 258 / 0.14);
+  --shadow-soft: 0 1px 2px 0 oklch(0.08 0.02 195 / 0.04),
+    0 1px 3px 0 oklch(0.08 0.02 195 / 0.06);
+  --shadow-card: 0 2px 4px -1px oklch(0.08 0.02 195 / 0.05),
+    0 8px 20px -6px oklch(0.08 0.02 195 / 0.08);
+  --shadow-lift: 0 4px 8px -2px oklch(0.08 0.02 195 / 0.06),
+    0 16px 40px -12px oklch(0.08 0.02 195 / 0.14);
 
   --animate-fade-up: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 
@@ -332,4 +336,65 @@
   &:focus {
     top: 1rem;
   }
+}
+
+/* ---------------------------------------------------------------
+   لهجه ترمینالی
+
+   این‌ها لهجه‌اند نه پایه: جاهای هدفمند استفاده می‌شوند تا سایت حس
+   فنی بدهد، بدون اینکه به کلیشه «متن سبز روی مشکی» بیفتد.
+--------------------------------------------------------------- */
+
+/* نشانگر چشمک‌زن ترمینال. زیر تنظیم «کاهش حرکت» کاربر خاموش می‌شود. */
+@utility terminal-cursor {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1.1em;
+  translate: 0 0.15em;
+  background-color: var(--primary);
+  animation: terminal-blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes terminal-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* خط فرمان: علامت $ که پیش از متن می‌آید و انتخاب‌شدنی نیست،
+   تا کپی‌کردن دستور، علامت را هم با خود نبرد. */
+@utility terminal-prompt {
+  &::before {
+    content: "$ ";
+    color: var(--primary);
+    user-select: none;
+  }
+}
+
+/* برچسب فنی تک‌فاصله — برای نام فناوری، اسلاگ و شناسه. */
+@utility code-chip {
+  direction: ltr;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background-color: var(--surface-2);
+  padding: 0.125rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* خطوط اسکن بسیار ظریف — بافت CRT بدون خواناسوزی.
+   فقط روی سطح‌های تزئینی استفاده شود، نه روی متن. */
+@utility scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--foreground) 4%, transparent) 0 1px,
+    transparent 1px 4px
+  );
 }

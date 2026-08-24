@@ -35,6 +35,15 @@ export function LogoMark({ className }: { className?: string }) {
       />
       {/* بازوی پایین */}
       <path d="M33.9 34.8h-6.1l-9.4-9.9 3.1-3.2z" fill="var(--logo-ink)" />
+      {/* نشانگر ترمینال — لهجه هکری نشان برند */}
+      <rect
+        x="35.4"
+        y="29.6"
+        width="4.2"
+        height="5.2"
+        fill="var(--logo-accent)"
+        className="motion-safe:animate-[terminal-blink_1.1s_steps(2,start)_infinite]"
+      />
     </svg>
   );
 }
@@ -60,7 +69,7 @@ export function Logo({ markOnly = false, className }: LogoProps) {
         /* نشان‌واژه رسمی برند لاتین و با حروف کوچک است. */
         <span
           dir="ltr"
-          className="text-foreground text-xl leading-none font-bold tracking-tight lowercase"
+          className="text-foreground font-mono text-xl leading-none font-bold tracking-tight lowercase"
         >
           {siteConfig.nameEn}
         </span>

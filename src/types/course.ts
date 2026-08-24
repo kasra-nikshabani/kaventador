@@ -17,6 +17,28 @@ export const COURSE_PROGRESS_LABELS: Record<CourseProgress, string> = {
   completed: "تکمیل‌شده",
 };
 
+/**
+ * قیمت‌گذاری دوره.
+ *
+ * شیء تودرتو است نه دو فیلد جدا، چون «نوع» و «مبلغ» با هم معنا دارند:
+ * دوره رایگان مبلغ ندارد و دوره پولی بدون مبلغ بی‌معناست. لایه
+ * اعتبارسنجی همین وابستگی را اجبار می‌کند.
+ */
+export type CoursePricing =
+  | { type: "free" }
+  | {
+      type: "paid";
+      /** مبلغ به تومان. */
+      amount: number;
+      /** مبلغ پیش از تخفیف؛ اگر باشد، خط‌خورده کنار قیمت می‌آید. */
+      originalAmount?: number;
+    };
+
+export const PRICING_TYPE_LABELS = {
+  free: "رایگان",
+  paid: "پولی",
+} as const;
+
 /** نوع محتوای یک درس. */
 export type LessonType = "video" | "article" | "quiz" | "project";
 
@@ -86,6 +108,7 @@ export interface Course {
   level: Level;
   status: ContentStatus;
   progress: CourseProgress;
+  pricing: CoursePricing;
   /** تاریخ انتشار درس بعدی — فقط برای دوره‌های در حال برگزاری معنا دارد. */
   nextReleaseAt?: ISODateString;
 

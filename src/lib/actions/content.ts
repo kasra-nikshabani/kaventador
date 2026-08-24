@@ -11,7 +11,7 @@ import {
   type DeleteState,
   type FormState,
 } from "@/lib/actions/content.schema";
-import { getSession } from "@/lib/auth/session";
+import { getAdminSession } from "@/lib/auth/session";
 import {
   countCategoryUsage,
   findArticleById,
@@ -30,6 +30,7 @@ import {
   removeUser,
 } from "@/lib/repositories";
 import { formatNumber } from "@/lib/utils/format";
+import type { CoursePricing } from "@/types";
 
 /**
  * اکشن‌های نوشتن پنل مدیریت.
@@ -39,8 +40,8 @@ import { formatNumber } from "@/lib/utils/format";
  * مستقیم به اکشن درخواست بفرستد.
  */
 async function requireSession(): Promise<void> {
-  const session = await getSession();
-  if (!session) redirect("/admin/login");
+  const session = await getAdminSession();
+  if (!session) redirect("/login?next=%2Fadmin");
 }
 
 /** همه مسیرهایی که با تغییر محتوا کهنه می‌شوند. */
@@ -209,8 +210,21 @@ export async function saveCourseAction(
   }
 
   /* رشته خالی نباید به عنوان تاریخ ذخیره شود. */
-  const { nextReleaseAt, ...rest } = parsed.data;
-  const data = { ...rest, nextReleaseAt: nextReleaseAt || undefined };
+  const { nextReleaseAt, pricingType, priceAmount, priceOriginal, ...rest } =
+    parsed.data;
+
+  /* سه فیلد تخت فرم به یک شیء قیمت‌گذاری تبدیل می‌شوند؛
+     مدل دامنه نباید شکل فرم HTML را بازتاب دهد. */
+  const pricing: CoursePricing =
+    pricingType === "paid"
+      ? {
+          type: "paid",
+          amount: Number(priceAmount),
+          originalAmount: priceOriginal ? Number(priceOriginal) : undefined,
+        }
+      : { type: "free" };
+
+  const data = { ...rest, pricing, nextReleaseAt: nextReleaseAt || undefined };
 
   if (id) {
     const existing = await findCourseById(id);

@@ -11,7 +11,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="system"
+      /* تم تیره، تمِ طراحی‌شده این سایت است؛ اگر کاربر ترجیحی
+         ثبت نکرده باشد، همان پیش‌فرض می‌شود. */
+      defaultTheme="dark"
       enableSystem
       disableTransitionOnChange
     >

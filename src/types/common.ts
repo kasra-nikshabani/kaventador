@@ -44,6 +44,7 @@ export interface QueryOptions {
   level?: Level;
   status?: ContentStatus;
   progress?: "upcoming" | "ongoing" | "completed";
+  pricing?: "free" | "paid";
   tag?: string;
   featuredOnly?: boolean;
 }

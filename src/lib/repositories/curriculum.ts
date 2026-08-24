@@ -1,3 +1,4 @@
+import type { CurriculumRepository } from "@/lib/repositories/contracts";
 import { nextId, store } from "@/lib/repositories/store";
 import type { Chapter, Course, Lesson } from "@/types";
 
@@ -215,3 +216,16 @@ export async function findLessonVideo(
   const chapter = course?.chapters.find((item) => item.id === chapterId);
   return chapter?.lessons.find((item) => item.id === lessonId)?.videoUrl;
 }
+
+/** گره‌زدن به قرارداد سرفصل — انحراف امضا خطای کامپایل می‌دهد. */
+export const mockCurriculumRepository = {
+  insertChapter,
+  patchChapter,
+  removeChapter,
+  moveChapter,
+  insertLesson,
+  patchLesson,
+  removeLesson,
+  moveLesson,
+  findLessonVideo,
+} satisfies CurriculumRepository;

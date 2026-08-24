@@ -3,6 +3,7 @@ import { mkdir, stat, unlink } from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
+import { serverEnv } from "@/lib/config/server-env";
 
 /**
  * ذخیره‌سازی فایل روی سرور خودمان.
@@ -17,7 +18,8 @@ import { pipeline } from "node:stream/promises";
  * به فضای ابری مهاجرت کند — فقط همین فایل عوض می‌شود.
  */
 
-export const UPLOAD_ROOT = path.join(process.cwd(), "storage", "uploads");
+export const UPLOAD_ROOT =
+  serverEnv.UPLOAD_DIR ?? path.join(process.cwd(), "storage", "uploads");
 
 /** حداکثر حجم ویدیو: ۵۰۰ مگابایت. */
 export const MAX_VIDEO_BYTES = 500 * 1024 * 1024;
