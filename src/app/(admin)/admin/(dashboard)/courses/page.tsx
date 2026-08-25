@@ -8,7 +8,12 @@ import { DeleteButton } from "@/components/admin/delete-button";
 import { CoursePrice, CourseProgressBadge } from "@/components/course";
 import { Badge, buttonStyles, EmptyState, Pagination } from "@/components/ui";
 import { deleteCourseAction } from "@/lib/actions/content";
-import { findAllCategories, findAllCourses } from "@/lib/repositories";
+import {
+  findAllCategories,
+  findAllCourses,
+  findAllUsers,
+} from "@/lib/repositories";
+import { countEnrollmentsByCourse } from "@/lib/services";
 import { matchesSearch, paginate } from "@/lib/services/shared";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { parseQueryParams, type RawSearchParams } from "@/lib/utils/query";
@@ -37,10 +42,15 @@ export default async function AdminCoursesPage({
   const resolved = await searchParams;
   const query = parseQueryParams(resolved, { pageSize: 10 });
 
-  const [all, categories] = await Promise.all([
+  const [all, categories, users] = await Promise.all([
     findAllCourses(),
     findAllCategories(),
+    findAllUsers(),
   ]);
+
+  /* شمار واقعی ثبت‌نام، نه `course.studentCount` که عدد ثابت داده اولیه
+     است و با ثبت‌نام‌های واقعی به‌روز نمی‌شود. */
+  const enrollmentCount = countEnrollmentsByCourse(users);
 
   const categoryTitle = (id: string) =>
     categories.find((item) => item.id === id)?.title ?? "—";
@@ -132,7 +142,12 @@ export default async function AdminCoursesPage({
             header: "عنوان",
             cell: (row) => (
               <span>
-                <span className="block font-medium">{row.title}</span>
+                <Link
+                  href={`/admin/courses/${row.id}`}
+                  className="hover:text-primary focus-visible:outline-ring block rounded font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  {row.title}
+                </Link>
                 <span className="code-chip mt-1">
                   {row.slug}
                 </span>
@@ -174,11 +189,11 @@ export default async function AdminCoursesPage({
           },
           {
             key: "students",
-            header: "دانشجو",
+            header: "ثبت‌نام",
             hideBelow: "sm",
             cell: (row) => (
               <span className="text-muted tabular-nums">
-                {formatNumber(row.studentCount)}
+                {formatNumber(enrollmentCount.get(row.id) ?? 0)}
               </span>
             ),
           },
@@ -198,6 +213,12 @@ export default async function AdminCoursesPage({
             align: "end",
             cell: (row) => (
               <span className="flex items-center justify-end gap-1">
+                <Link
+                  href={`/admin/courses/${row.id}`}
+                  className={buttonStyles({ variant: "ghost", size: "sm" })}
+                >
+                  جزئیات
+                </Link>
                 <Link
                   href={`/admin/courses/${row.id}/curriculum`}
                   className={buttonStyles({ variant: "ghost", size: "sm" })}

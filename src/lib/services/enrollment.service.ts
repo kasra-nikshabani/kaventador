@@ -170,6 +170,87 @@ export async function getStudentsOfInstructor(
   );
 }
 
+export interface CourseEnrollee {
+  user: Pick<User, "id" | "name" | "username" | "email" | "avatar" | "status">;
+  enrollment: Enrollment;
+  progressPercent: number;
+  completedCount: number;
+  totalLessons: number;
+}
+
+/**
+ * ثبت‌نام‌کنندگان یک دوره — برای صفحه جزئیات در پنل مدیریت.
+ *
+ * برخلاف `getStudentsOfInstructor` که دامنه‌اش «دوره‌های من» است، اینجا
+ * دامنه یک دوره مشخص است و فراخوان باید خودش دسترسی را سنجیده باشد.
+ *
+ * مرتب‌سازی: تازه‌ترین ثبت‌نام اول — چیزی که مدیر معمولاً دنبالش است.
+ */
+export async function getCourseEnrollees(
+  courseId: ID,
+  allUsers: User[],
+): Promise<CourseEnrollee[]> {
+  const course = (await findAllCourses()).find((item) => item.id === courseId);
+  if (!course) return [];
+
+  const validLessonIds = lessonIdsOf(course);
+
+  return allUsers
+    .flatMap((user) => {
+      const enrollment = user.enrollments.find(
+        (item) => item.courseId === courseId,
+      );
+      if (!enrollment) return [];
+
+      const progress = calculateProgress(
+        enrollment.completedLessonIds,
+        validLessonIds,
+      );
+
+      return [
+        {
+          user: {
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            avatar: user.avatar,
+            status: user.status,
+          },
+          enrollment,
+          progressPercent: progress.percent,
+          completedCount: progress.completed,
+          totalLessons: progress.total,
+        },
+      ];
+    })
+    .sort((a, b) =>
+      b.enrollment.enrolledAt.localeCompare(a.enrollment.enrolledAt),
+    );
+}
+
+/**
+ * شمار ثبت‌نام واقعی هر دوره.
+ *
+ * ⚠️ با `course.studentCount` یکی نیست: آن یک عدد ذخیره‌شده در داده اولیه
+ * است و با ثبت‌نام‌های واقعی به‌روز نمی‌شود. در پنل مدیریت همیشه این
+ * تابع را استفاده کنید — عدد نادرست در پنل، تصمیم نادرست می‌سازد.
+ */
+export function countEnrollmentsByCourse(allUsers: User[]): Map<ID, number> {
+  const counts = new Map<ID, number>();
+
+  for (const user of allUsers) {
+    for (const enrollment of user.enrollments) {
+      counts.set(
+        enrollment.courseId,
+        (counts.get(enrollment.courseId) ?? 0) + 1,
+      );
+    }
+  }
+
+  return counts;
+}
+
 /** دوره‌های یک مدرس — برای پنل مدرس. */
 export async function getCoursesOfInstructor(personId: ID) {
   const all = await findAllCourses();
