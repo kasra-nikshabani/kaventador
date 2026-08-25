@@ -5,3 +5,4 @@ export * from "./course-price";
 export * from "./course-progress-badge";
 export * from "./curriculum";
 export * from "./lesson-player";
+export * from "./enroll-button";

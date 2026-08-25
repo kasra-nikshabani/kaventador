@@ -4,8 +4,6 @@ import {
   CircleCheck,
   Clock,
   FolderGit2,
-  PlayCircle,
-  ShoppingCart,
   Signal,
   Star,
   Users,
@@ -18,6 +16,7 @@ import {
   CoursePrice,
   CourseProgressBadge,
   Curriculum,
+  EnrollButton,
 } from "@/components/course";
 import {
   Breadcrumb,
@@ -25,12 +24,13 @@ import {
   PersonCard,
   SectionHeading,
 } from "@/components/shared";
-import Link from "next/link";
-import { Badge, buttonStyles, Card, Container } from "@/components/ui";
+import { Badge, Card, Container } from "@/components/ui";
 import { breadcrumbJsonLd, courseJsonLd } from "@/lib/seo/json-ld";
+import { getSession } from "@/lib/auth/session";
 import {
   getAllCourseSlugs,
   getCourseBySlug,
+  getEnrollment,
   getRelatedCourses,
 } from "@/lib/services";
 import {
@@ -93,7 +93,14 @@ export default async function CourseDetailPage({ params }: PageProps) {
 
   if (!course) notFound();
 
-  const related = await getRelatedCourses(slug, 3);
+  const [related, session] = await Promise.all([
+    getRelatedCourses(slug, 3),
+    getSession(),
+  ]);
+
+  const enrollment = session
+    ? await getEnrollment(session.userId, course.id)
+    : null;
 
   const stats = [
     { icon: Clock, label: "مدت دوره", value: formatDuration(course.durationMinutes) },
@@ -193,26 +200,13 @@ export default async function CourseDetailPage({ params }: PageProps) {
               <CoursePrice pricing={course.pricing} size="detail" />
             </div>
 
-            <Link
-              href={
-                course.pricing.type === "free"
-                  ? `#curriculum-heading`
-                  : `/courses/${course.slug}/enroll`
-              }
-              className={buttonStyles({ size: "lg" })}
-            >
-              {course.pricing.type === "free" ? (
-                <>
-                  <PlayCircle aria-hidden="true" />
-                  شروع رایگان دوره
-                </>
-              ) : (
-                <>
-                  <ShoppingCart aria-hidden="true" />
-                  ثبت‌نام در دوره
-                </>
-              )}
-            </Link>
+            <EnrollButton
+              courseId={course.id}
+              courseSlug={course.slug}
+              pricing={course.pricing}
+              enrollmentStatus={enrollment?.status}
+              isLoggedIn={Boolean(session)}
+            />
           </div>
 
           {/* آمار دوره.

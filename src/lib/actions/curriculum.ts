@@ -1,14 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import {
   chapterFormSchema,
   lessonFormSchema,
   type CurriculumState,
 } from "@/lib/actions/curriculum.schema";
 import { collectErrors } from "@/lib/actions/content.schema";
-import { getAdminSession } from "@/lib/auth/session";
+import { requireCourseAccess } from "@/lib/auth/authorize";
 import { deleteStoredFile } from "@/lib/media/storage";
 import {
   findLessonVideo,
@@ -22,14 +21,12 @@ import {
   removeLesson,
 } from "@/lib/repositories/curriculum";
 
-/** هر اکشن نشست را خودش بررسی می‌کند؛ proxy اکشن‌ها را نمی‌بیند. */
-async function requireSession(): Promise<void> {
-  const session = await getAdminSession();
-  if (!session) redirect("/login?next=%2Fadmin");
-}
+/* هر اکشن نشست *و مالکیت دوره* را خودش بررسی می‌کند؛ proxy اکشن‌ها را
+   نمی‌بیند و `courseId` از فرمی می‌آید که کاربر می‌فرستد. */
 
 function revalidateCourse(courseId: string) {
   revalidatePath(`/admin/courses/${courseId}/curriculum`);
+  revalidatePath(`/instructor/courses/${courseId}/curriculum`);
   revalidatePath("/", "layout");
 }
 
@@ -41,9 +38,9 @@ export async function saveChapterAction(
   _previous: CurriculumState,
   formData: FormData,
 ): Promise<CurriculumState> {
-  await requireSession();
-
   const courseId = String(formData.get("courseId") ?? "");
+  await requireCourseAccess(courseId);
+
   const chapterId = String(formData.get("chapterId") ?? "");
 
   const parsed = chapterFormSchema.safeParse({
@@ -79,9 +76,9 @@ export async function deleteChapterAction(
   _previous: CurriculumState,
   formData: FormData,
 ): Promise<CurriculumState> {
-  await requireSession();
-
   const courseId = String(formData.get("courseId") ?? "");
+  await requireCourseAccess(courseId);
+
   const chapterId = String(formData.get("chapterId") ?? "");
 
   const removed = await removeChapter(courseId, chapterId);
@@ -92,9 +89,9 @@ export async function deleteChapterAction(
 }
 
 export async function moveChapterAction(formData: FormData): Promise<void> {
-  await requireSession();
-
   const courseId = String(formData.get("courseId") ?? "");
+  await requireCourseAccess(courseId);
+
   await moveChapter(
     courseId,
     String(formData.get("chapterId") ?? ""),
@@ -112,9 +109,9 @@ export async function saveLessonAction(
   _previous: CurriculumState,
   formData: FormData,
 ): Promise<CurriculumState> {
-  await requireSession();
-
   const courseId = String(formData.get("courseId") ?? "");
+  await requireCourseAccess(courseId);
+
   const chapterId = String(formData.get("chapterId") ?? "");
   const lessonId = String(formData.get("lessonId") ?? "");
 
@@ -167,9 +164,9 @@ export async function deleteLessonAction(
   _previous: CurriculumState,
   formData: FormData,
 ): Promise<CurriculumState> {
-  await requireSession();
-
   const courseId = String(formData.get("courseId") ?? "");
+  await requireCourseAccess(courseId);
+
   const chapterId = String(formData.get("chapterId") ?? "");
   const lessonId = String(formData.get("lessonId") ?? "");
 
@@ -186,9 +183,9 @@ export async function deleteLessonAction(
 }
 
 export async function moveLessonAction(formData: FormData): Promise<void> {
-  await requireSession();
-
   const courseId = String(formData.get("courseId") ?? "");
+  await requireCourseAccess(courseId);
+
   await moveLesson(
     courseId,
     String(formData.get("chapterId") ?? ""),

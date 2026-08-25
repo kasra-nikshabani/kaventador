@@ -13,7 +13,10 @@ import {
   Textarea,
 } from "@/components/ui";
 import { saveCourseAction } from "@/lib/actions/content";
-import { FORM_INITIAL_STATE } from "@/lib/actions/content.schema";
+import {
+  FORM_INITIAL_STATE,
+  type FormState,
+} from "@/lib/actions/content.schema";
 import {
   CONTENT_STATUS_LABELS,
   COURSE_PROGRESS_LABELS,
@@ -25,13 +28,30 @@ import {
 
 export interface CourseFormProps {
   categories: Category[];
-  people: Person[];
+  /** فهرست مدرس‌ها برای انتخاب. در حالت «مدرس قفل» نادیده گرفته می‌شود. */
+  people?: Person[];
   course?: Course;
+  /**
+   * وقتی مدرس خودش فرم را پر می‌کند: نامش نمایش داده می‌شود ولی قابل
+   * تغییر نیست. سرور هم مستقل از این، مقدار را از نشست می‌گیرد؛ این
+   * فقط رابط کاربری است، نه محافظ.
+   */
+  lockedInstructor?: Person;
+  /** اکشن ذخیره — ادمین و مدرس هرکدام مال خودشان را می‌فرستند. */
+  action?: (state: FormState, formData: FormData) => Promise<FormState>;
+  cancelHref?: string;
 }
 
-export function CourseForm({ categories, people, course }: CourseFormProps) {
+export function CourseForm({
+  categories,
+  people = [],
+  course,
+  lockedInstructor,
+  action = saveCourseAction,
+  cancelHref = "/admin/courses",
+}: CourseFormProps) {
   const [state, formAction, isPending] = useActionState(
-    saveCourseAction,
+    action,
     FORM_INITIAL_STATE,
   );
 
@@ -145,25 +165,36 @@ export function CourseForm({ categories, people, course }: CourseFormProps) {
             </Select>
           </Field>
 
-          <Field
-            label="مدرس"
-            htmlFor="course-instructor"
-            required
-            error={state.errors?.instructorId}
-          >
-            <Select
-              id="course-instructor"
-              name="instructorId"
-              defaultValue={text("instructorId", course?.instructorId)}
+          {lockedInstructor ? (
+            <Field label="مدرس" htmlFor="course-instructor" hint="دوره به نام شما ثبت می‌شود.">
+              <Input
+                id="course-instructor"
+                value={lockedInstructor.name}
+                readOnly
+                disabled
+              />
+            </Field>
+          ) : (
+            <Field
+              label="مدرس"
+              htmlFor="course-instructor"
+              required
+              error={state.errors?.instructorId}
             >
-              <option value="">انتخاب کنید…</option>
-              {people.map((person) => (
-                <option key={person.id} value={person.id}>
-                  {person.name}
-                </option>
-              ))}
-            </Select>
-          </Field>
+              <Select
+                id="course-instructor"
+                name="instructorId"
+                defaultValue={text("instructorId", course?.instructorId)}
+              >
+                <option value="">انتخاب کنید…</option>
+                {people.map((person) => (
+                  <option key={person.id} value={person.id}>
+                    {person.name}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          )}
 
           <Field label="سطح" htmlFor="course-level" required error={state.errors?.level}>
             <Select
@@ -348,13 +379,13 @@ export function CourseForm({ categories, people, course }: CourseFormProps) {
 
         {!course && (
           <p className="text-muted bg-surface-2 rounded-xl px-4 py-3 text-sm">
-            دوره تازه بدون فصل و درس ساخته می‌شود. ویرایش سرفصل قابلیت جداگانه‌ای
-            است که هنوز اضافه نشده.
+            دوره تازه بدون فصل و درس ساخته می‌شود. پس از ذخیره، از دکمه
+            «سرفصل و ویدیو» فصل‌ها و درس‌ها را اضافه کنید.
           </p>
         )}
 
         <div className="border-border flex flex-wrap justify-end gap-3 border-t pt-5">
-          <Link href="/admin/courses" className={buttonStyles({ variant: "secondary" })}>
+          <Link href={cancelHref} className={buttonStyles({ variant: "secondary" })}>
             انصراف
           </Link>
           <Button type="submit" disabled={isPending}>

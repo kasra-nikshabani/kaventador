@@ -7,3 +7,4 @@ export * from "./empty-state";
 export * from "./input";
 export * from "./pagination";
 export * from "./skeleton";
+export * from "./progress-bar";

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getAdminSession } from "@/lib/auth/session";
+import { getSession } from "@/lib/auth/session";
 import {
   ALLOWED_VIDEO_TYPES,
   MAX_VIDEO_BYTES,
@@ -14,10 +14,14 @@ import {
  *
  * نشست اینجا هم بررسی می‌شود؛ `proxy.ts` فقط مسیرهای `/admin` را
  * می‌بیند و این مسیر زیر `/api` است.
+ *
+ * مدرس هم اجازه آپلود دارد. فایل در این مرحله به هیچ درسی وصل نیست —
+ * فقط روی دیسک می‌نشیند و نشانی‌اش برمی‌گردد. اتصال واقعی موقع ذخیره
+ * درس انجام می‌شود و آنجا مالکیت دوره بررسی می‌شود.
  */
 export async function POST(request: NextRequest) {
-  const session = await getAdminSession();
-  if (!session) {
+  const session = await getSession();
+  if (!session || (session.role !== "admin" && session.role !== "instructor")) {
     return NextResponse.json({ error: "دسترسی ندارید." }, { status: 401 });
   }
 

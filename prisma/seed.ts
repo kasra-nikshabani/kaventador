@@ -185,7 +185,11 @@ async function main() {
         joinedAt: new Date(user.joinedAt),
         lastActiveAt: user.lastActiveAt ? new Date(user.lastActiveAt) : null,
         enrollments: {
-          create: user.enrolledCourseIds.map((courseId) => ({ courseId })),
+          create: user.enrollments.map((enrollment) => ({
+            courseId: enrollment.courseId,
+            enrolledAt: new Date(enrollment.enrolledAt),
+            progress: 0,
+          })),
         },
       },
     });

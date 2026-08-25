@@ -98,7 +98,7 @@ export async function signupAction(
     status: "active",
     joinedAt: today,
     lastActiveAt: today,
-    enrolledCourseIds: [],
+    enrollments: [],
   });
 
   await createSession(user.id);

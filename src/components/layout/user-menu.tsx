@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { GraduationCap, LayoutDashboard, LogOut, Presentation } from "lucide-react";
 import Link from "next/link";
 import { Avatar, Button, buttonStyles } from "@/components/ui";
 import { logoutAction } from "@/lib/actions/account";
@@ -14,7 +14,8 @@ export interface UserMenuProps {
  * ناحیه حساب کاربری در هدر.
  *
  * وقتی کاربر وارد نشده: دکمه ورود و ثبت‌نام.
- * وقتی وارد شده: آواتار، و برای مدیر یک میان‌بر به پنل.
+ * وقتی وارد شده: آواتار، میان‌بر به «دوره‌های من»، و بسته به نقش،
+ * میان‌بر به پنل مدیریت یا پنل مدرس.
  *
  * خروج با فرم و POST انجام می‌شود نه لینک — چون تغییر وضعیت است و
  * نباید با یک پیش‌واکشی مرورگر اتفاق بیفتد.
@@ -41,6 +42,26 @@ export function UserMenu({ session, avatar }: UserMenuProps) {
 
   return (
     <div className="flex items-center gap-2">
+      <Link
+        href="/dashboard"
+        title="دوره‌های من"
+        aria-label="دوره‌های من"
+        className={buttonStyles({ variant: "ghost", size: "icon" })}
+      >
+        <GraduationCap aria-hidden="true" />
+      </Link>
+
+      {session.role === "instructor" && (
+        <Link
+          href="/instructor"
+          title="پنل مدرس"
+          aria-label="پنل مدرس"
+          className={buttonStyles({ variant: "ghost", size: "icon" })}
+        >
+          <Presentation aria-hidden="true" />
+        </Link>
+      )}
+
       {session.role === "admin" && (
         <Link
           href="/admin"

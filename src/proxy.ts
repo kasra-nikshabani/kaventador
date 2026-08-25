@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth/session";
 
 /**
- * محافظت از پنل ادمین.
+ * محافظت از مسیرهای پشت ورود: پنل ادمین، پنل مدرس و پنل کاربر.
  *
  * از Next 16 این قرارداد «proxy» نام دارد (قبلاً middleware بود).
  *
@@ -26,5 +26,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/instructor/:path*", "/dashboard/:path*"],
 };

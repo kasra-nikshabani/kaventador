@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
@@ -65,6 +66,12 @@ export default async function AdminUsersPage({
       <AdminPageHeader
         title="کاربران"
         description="مدیریت نقش و وضعیت کاربران پلتفرم."
+        action={
+          <Link href="/admin/users/new" className={buttonStyles()}>
+            <Plus aria-hidden="true" />
+            کاربر جدید
+          </Link>
+        }
       />
 
       <AdminSearch
@@ -143,7 +150,7 @@ export default async function AdminUsersPage({
             hideBelow: "md",
             cell: (row) => (
               <span className="text-muted tabular-nums">
-                {formatNumber(row.enrolledCourseIds.length)}
+                {formatNumber(row.enrollments.length)}
               </span>
             ),
           },

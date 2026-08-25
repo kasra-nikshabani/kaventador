@@ -24,11 +24,23 @@ export const UPLOAD_ROOT =
 /** حداکثر حجم ویدیو: ۵۰۰ مگابایت. */
 export const MAX_VIDEO_BYTES = 500 * 1024 * 1024;
 
+/** حداکثر حجم تصویر پروفایل: ۳ مگابایت. */
+export const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
+
 export const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm"] as const;
+
+export const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+] as const;
 
 const EXTENSION_BY_TYPE: Record<string, string> = {
   "video/mp4": "mp4",
   "video/webm": "webm",
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
 };
 
 export type StoredFile = {
@@ -50,7 +62,16 @@ function safeFileName(mimeType: string): string {
 }
 
 export async function saveVideo(file: File): Promise<StoredFile> {
-  const directory = path.join(UPLOAD_ROOT, "videos");
+  return saveTo("videos", file);
+}
+
+/** تصویر پروفایل کاربر. */
+export async function saveAvatar(file: File): Promise<StoredFile> {
+  return saveTo("avatars", file);
+}
+
+async function saveTo(folder: string, file: File): Promise<StoredFile> {
+  const directory = path.join(UPLOAD_ROOT, folder);
   await mkdir(directory, { recursive: true });
 
   const fileName = safeFileName(file.type);
@@ -65,7 +86,7 @@ export async function saveVideo(file: File): Promise<StoredFile> {
   const written = await stat(absolutePath);
 
   return {
-    url: `/api/media/videos/${fileName}`,
+    url: `/api/media/${folder}/${fileName}`,
     sizeBytes: written.size,
   };
 }

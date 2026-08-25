@@ -1,4 +1,5 @@
 import type { ID, ISODateString } from "./common";
+import type { Enrollment } from "./enrollment";
 
 export type UserRole = "admin" | "instructor" | "student";
 
@@ -33,5 +34,11 @@ export interface User {
   status: UserStatus;
   joinedAt: ISODateString;
   lastActiveAt?: ISODateString;
-  enrolledCourseIds: ID[];
+  /**
+   * پروفایل عمومی مدرس/نویسنده.
+   * فقط حساب‌های `instructor` و `admin` دارند؛ دانشجو ندارد.
+   * دوره‌ها به `Person` وصل‌اند نه `User`، و این پل بین آن دوست.
+   */
+  personId?: ID;
+  enrollments: Enrollment[];
 }

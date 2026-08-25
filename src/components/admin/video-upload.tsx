@@ -85,11 +85,15 @@ export function VideoUpload({
       <input type="hidden" name={`${namePrefix}Url`} value={url} />
       <input type="hidden" name={`${namePrefix}SizeBytes`} value={size} />
 
+      {/* پنهان است و دکمه پایین بازش می‌کند؛ پس از ترتیب Tab بیرون می‌رود
+          ولی نام دسترس‌پذیر دارد. */}
       <input
         ref={inputRef}
         type="file"
         accept="video/mp4,video/webm"
         className="sr-only"
+        tabIndex={-1}
+        aria-label="انتخاب فایل ویدیوی درس"
         onChange={(event) => {
           const file = event.target.files?.[0];
           if (file) upload(file);

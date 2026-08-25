@@ -139,6 +139,37 @@ export const courseFormSchema = z.object({
     }
   });
 
+/**
+ * ساخت کاربر تازه از پنل مدیریت.
+ *
+ * تنها راه ساخت حساب `instructor` همین است — ثبت‌نام عمومی همیشه
+ * `student` می‌سازد.
+ */
+export const createUserFormSchema = z.object({
+  name: requiredText("نام", 3, 80),
+  username: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(3, `نام کاربری باید دست‌کم ${toPersianDigits(3)} نویسه باشد.`)
+    .max(20, `نام کاربری نباید بیش از ${toPersianDigits(20)} نویسه باشد.`)
+    .regex(
+      /^[a-z0-9_]+$/,
+      "نام کاربری فقط می‌تواند حروف کوچک لاتین، عدد و زیرخط باشد.",
+    ),
+  email: z.string().trim().toLowerCase().email("فرمت ایمیل معتبر نیست."),
+  password: z
+    .string()
+    .min(8, `رمز عبور باید دست‌کم ${toPersianDigits(8)} نویسه باشد.`)
+    .max(128),
+  role: z.enum(["admin", "instructor", "student"], {
+    message: "نقش معتبر نیست.",
+  }),
+  /* فقط برای مدرس: عنوان شغلی و معرفی که در صفحه دوره دیده می‌شود. */
+  personRole: z.string().trim().max(80).optional(),
+  personBio: z.string().trim().max(600).optional(),
+});
+
 export const userFormSchema = z.object({
   name: requiredText("نام", 3, 80),
   email: z.string().trim().email("فرمت ایمیل معتبر نیست."),

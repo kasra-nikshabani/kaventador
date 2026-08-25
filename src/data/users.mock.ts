@@ -20,11 +20,12 @@ export const usersMock: User[] = [
     email: "kasra@kaventador.ir",
     passwordHash: "scrypt$16384$c457e3c1566cb942703d37a22d099829$f146250251430686c50a029859a34cb57c723ac6faaac94bc361fb02e4830b457edac7f615bc63631e40602dd619808056ba5c1d852a8bfec4d003b9d7a200b6",
     avatar: "/images/founder/avatar.jpg",
+    personId: "person-kasra",
     role: "admin",
     status: "active",
     joinedAt: "2025-09-01",
     lastActiveAt: "2026-08-22",
-    enrolledCourseIds: [],
+    enrollments: [],
   },
   {
     id: "user-2",
@@ -36,7 +37,20 @@ export const usersMock: User[] = [
     status: "active",
     joinedAt: "2026-01-18",
     lastActiveAt: "2026-08-20",
-    enrolledCourseIds: ["course-java-core", "course-spring-api"],
+    enrollments: [
+      {
+        courseId: "course-java-core",
+        status: "active",
+        enrolledAt: "2026-01-10",
+        completedLessonIds: ["java-core-c1-l1", "java-core-c1-l2"],
+      },
+      {
+        courseId: "course-spring-api",
+        status: "active",
+        enrolledAt: "2026-02-11",
+        completedLessonIds: [],
+      },
+    ],
   },
   {
     id: "user-3",
@@ -48,7 +62,14 @@ export const usersMock: User[] = [
     status: "active",
     joinedAt: "2026-02-03",
     lastActiveAt: "2026-08-21",
-    enrolledCourseIds: ["course-react-project"],
+    enrollments: [
+      {
+        courseId: "course-react-project",
+        status: "active",
+        enrolledAt: "2026-01-10",
+        completedLessonIds: ["java-core-c1-l1", "java-core-c1-l2"],
+      },
+    ],
   },
   {
     id: "user-4",
@@ -60,7 +81,7 @@ export const usersMock: User[] = [
     status: "active",
     joinedAt: "2026-02-27",
     lastActiveAt: "2026-08-19",
-    enrolledCourseIds: [],
+    enrollments: [],
   },
   {
     id: "user-5",
@@ -72,7 +93,14 @@ export const usersMock: User[] = [
     status: "inactive",
     joinedAt: "2026-03-14",
     lastActiveAt: "2026-05-02",
-    enrolledCourseIds: ["course-js-modern"],
+    enrollments: [
+      {
+        courseId: "course-js-modern",
+        status: "active",
+        enrolledAt: "2026-01-10",
+        completedLessonIds: ["java-core-c1-l1", "java-core-c1-l2"],
+      },
+    ],
   },
   {
     id: "user-6",
@@ -84,10 +112,25 @@ export const usersMock: User[] = [
     status: "active",
     joinedAt: "2026-04-09",
     lastActiveAt: "2026-08-22",
-    enrolledCourseIds: [
-      "course-java-core",
-      "course-spring-api",
-      "course-nextjs-fullstack",
+    enrollments: [
+      {
+        courseId: "course-java-core",
+        status: "active",
+        enrolledAt: "2026-01-10",
+        completedLessonIds: ["java-core-c1-l1", "java-core-c1-l2"],
+      },
+      {
+        courseId: "course-spring-api",
+        status: "active",
+        enrolledAt: "2026-02-11",
+        completedLessonIds: [],
+      },
+      {
+        courseId: "course-nextjs-fullstack",
+        status: "active",
+        enrolledAt: "2026-03-12",
+        completedLessonIds: ["spring-boot-api-c1-l1"],
+      },
     ],
   },
   {
@@ -100,7 +143,7 @@ export const usersMock: User[] = [
     status: "banned",
     joinedAt: "2026-04-22",
     lastActiveAt: "2026-06-11",
-    enrolledCourseIds: [],
+    enrollments: [],
   },
   {
     id: "user-8",
@@ -112,7 +155,7 @@ export const usersMock: User[] = [
     status: "active",
     joinedAt: "2026-05-06",
     lastActiveAt: "2026-08-18",
-    enrolledCourseIds: [],
+    enrollments: [],
   },
   {
     id: "user-9",
@@ -124,7 +167,14 @@ export const usersMock: User[] = [
     status: "active",
     joinedAt: "2026-05-30",
     lastActiveAt: "2026-08-15",
-    enrolledCourseIds: ["course-javafx-desktop"],
+    enrollments: [
+      {
+        courseId: "course-javafx-desktop",
+        status: "active",
+        enrolledAt: "2026-01-10",
+        completedLessonIds: ["java-core-c1-l1", "java-core-c1-l2"],
+      },
+    ],
   },
   {
     id: "user-10",
@@ -136,7 +186,20 @@ export const usersMock: User[] = [
     status: "active",
     joinedAt: "2026-06-17",
     lastActiveAt: "2026-08-21",
-    enrolledCourseIds: ["course-react-project", "course-js-modern"],
+    enrollments: [
+      {
+        courseId: "course-react-project",
+        status: "active",
+        enrolledAt: "2026-01-10",
+        completedLessonIds: ["java-core-c1-l1", "java-core-c1-l2"],
+      },
+      {
+        courseId: "course-js-modern",
+        status: "active",
+        enrolledAt: "2026-02-11",
+        completedLessonIds: [],
+      },
+    ],
   },
   {
     id: "user-11",
@@ -148,7 +211,14 @@ export const usersMock: User[] = [
     status: "active",
     joinedAt: "2026-07-02",
     lastActiveAt: "2026-08-22",
-    enrolledCourseIds: ["course-nextjs-fullstack"],
+    enrollments: [
+      {
+        courseId: "course-nextjs-fullstack",
+        status: "active",
+        enrolledAt: "2026-01-10",
+        completedLessonIds: ["java-core-c1-l1", "java-core-c1-l2"],
+      },
+    ],
   },
   {
     id: "user-12",
@@ -160,6 +230,6 @@ export const usersMock: User[] = [
     status: "inactive",
     joinedAt: "2026-07-25",
     lastActiveAt: "2026-08-01",
-    enrolledCourseIds: [],
+    enrollments: [],
   },
 ];

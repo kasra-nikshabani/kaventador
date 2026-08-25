@@ -33,6 +33,7 @@ export interface ContentRepository {
 
   findAllPeople(): Promise<Person[]>;
   findPersonById(id: string): Promise<Person | null>;
+  insertPerson(person: Person): Promise<Person>;
 
   findAllUsers(): Promise<User[]>;
   findUserById(id: string): Promise<User | null>;

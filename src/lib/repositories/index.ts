@@ -174,6 +174,11 @@ export async function removeCategory(id: string): Promise<boolean> {
   return true;
 }
 
+export async function insertPerson(person: Person): Promise<Person> {
+  store.people.push(structuredClone(person));
+  return structuredClone(person);
+}
+
 export async function insertUser(user: User): Promise<User> {
   store.users.push(structuredClone(user));
   return structuredClone(user);
@@ -231,6 +236,7 @@ export const mockContentRepository = {
   findCategoryById,
   findAllPeople,
   findPersonById,
+  insertPerson,
   findAllUsers,
   findUserById,
   findUserByUsername,

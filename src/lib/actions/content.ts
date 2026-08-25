@@ -6,23 +6,21 @@ import {
   articleFormSchema,
   categoryFormSchema,
   collectErrors,
-  courseFormSchema,
+  createUserFormSchema,
   userFormSchema,
   type DeleteState,
   type FormState,
 } from "@/lib/actions/content.schema";
+import { persistCourse } from "@/lib/actions/course-write";
 import { getAdminSession } from "@/lib/auth/session";
 import {
   countCategoryUsage,
   findArticleById,
-  findCourseById,
   insertArticle,
   insertCategory,
-  insertCourse,
   nextId,
   patchArticle,
   patchCategory,
-  patchCourse,
   patchUser,
   removeArticle,
   removeCategory,
@@ -30,7 +28,13 @@ import {
   removeUser,
 } from "@/lib/repositories";
 import { formatNumber } from "@/lib/utils/format";
-import type { CoursePricing } from "@/types";
+import { hashPassword } from "@/lib/auth/password";
+import {
+  findUserByEmail,
+  findUserByUsername,
+  insertPerson,
+  insertUser,
+} from "@/lib/repositories";
 
 /**
  * اکشن‌های نوشتن پنل مدیریت.
@@ -193,69 +197,8 @@ export async function saveCourseAction(
 ): Promise<FormState> {
   await requireSession();
 
-  const id = String(formData.get("id") ?? "");
-  const values = readForm(formData);
-  const parsed = courseFormSchema.safeParse({
-    ...values,
-    isFeatured: formData.get("isFeatured") === "on",
-  });
-
-  if (!parsed.success) {
-    return {
-      status: "error",
-      message: "لطفاً خطاهای زیر را برطرف کنید.",
-      errors: collectErrors(parsed.error.issues),
-      values,
-    };
-  }
-
-  /* رشته خالی نباید به عنوان تاریخ ذخیره شود. */
-  const { nextReleaseAt, pricingType, priceAmount, priceOriginal, ...rest } =
-    parsed.data;
-
-  /* سه فیلد تخت فرم به یک شیء قیمت‌گذاری تبدیل می‌شوند؛
-     مدل دامنه نباید شکل فرم HTML را بازتاب دهد. */
-  const pricing: CoursePricing =
-    pricingType === "paid"
-      ? {
-          type: "paid",
-          amount: Number(priceAmount),
-          originalAmount: priceOriginal ? Number(priceOriginal) : undefined,
-        }
-      : { type: "free" };
-
-  const data = { ...rest, pricing, nextReleaseAt: nextReleaseAt || undefined };
-
-  if (id) {
-    const existing = await findCourseById(id);
-    if (!existing) return { status: "error", message: "دوره پیدا نشد." };
-
-    await patchCourse(id, {
-      ...data,
-      isFeatured: Boolean(data.isFeatured),
-      updatedAt: nowIso(),
-    });
-  } else {
-    /* دوره تازه بدون فصل ساخته می‌شود؛ ویرایش سرفصل قابلیت جداگانه‌ای است. */
-    await insertCourse({
-      id: nextId("course"),
-      ...data,
-      isFeatured: Boolean(data.isFeatured),
-      cover: "",
-      durationMinutes: 0,
-      lessonCount: 0,
-      studentCount: 0,
-      rating: 0,
-      ratingCount: 0,
-      chapters: [],
-      projects: [],
-      publishedAt: nowIso(),
-      updatedAt: nowIso(),
-    });
-  }
-
-  revalidateContent();
-  redirect("/admin/courses?saved=1");
+  /* مدیر مدرس را از فهرست انتخاب می‌کند، پس مقدار فرم محترم است. */
+  return persistCourse(formData, { redirectTo: "/admin/courses?saved=1" });
 }
 
 export async function deleteCourseAction(
@@ -312,4 +255,92 @@ export async function deleteUserAction(
 
   revalidatePath("/admin/users");
   return { status: "success" };
+}
+
+/**
+ * ساخت کاربر از پنل مدیریت.
+ *
+ * برای نقش `instructor` یک پروفایل `Person` هم ساخته می‌شود و به حساب
+ * وصل می‌گردد — چون دوره‌ها به `Person` ارجاع می‌دهند نه به `User`، و
+ * بدون این پل، پنل مدرس نمی‌داند کدام دوره‌ها مال اوست.
+ */
+export async function createUserAction(
+  _previous: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  await requireSession();
+
+  const values = readForm(formData);
+  const parsed = createUserFormSchema.safeParse(values);
+
+  /* رمز عبور هرگز به فرم برنمی‌گردد. */
+  const echo = {
+    name: values.name ?? "",
+    username: values.username ?? "",
+    email: values.email ?? "",
+    role: values.role ?? "student",
+    personRole: values.personRole ?? "",
+    personBio: values.personBio ?? "",
+  };
+
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: "لطفاً خطاهای زیر را برطرف کنید.",
+      errors: collectErrors(parsed.error.issues),
+      values: echo,
+    };
+  }
+
+  const { name, username, email, password, role, personRole, personBio } =
+    parsed.data;
+
+  if (await findUserByUsername(username)) {
+    return {
+      status: "error",
+      message: "این نام کاربری قبلاً گرفته شده است.",
+      errors: { username: "در دسترس نیست." },
+      values: echo,
+    };
+  }
+
+  if (await findUserByEmail(email)) {
+    return {
+      status: "error",
+      message: "این ایمیل قبلاً ثبت شده است.",
+      errors: { email: "در دسترس نیست." },
+      values: echo,
+    };
+  }
+
+  let personId: string | undefined;
+
+  if (role === "instructor" || role === "admin") {
+    const person = await insertPerson({
+      id: nextId("person"),
+      slug: username,
+      name,
+      role: personRole || "مدرس کاوِنتادور",
+      bio: personBio || "",
+      avatar: "",
+      socials: {},
+    });
+    personId = person.id;
+  }
+
+  await insertUser({
+    id: nextId("user"),
+    name,
+    username,
+    email,
+    passwordHash: await hashPassword(password),
+    personId,
+    role,
+    status: "active",
+    joinedAt: nowIso(),
+    enrollments: [],
+  });
+
+  revalidatePath("/admin/users");
+  redirect("/admin/users?saved=1");
 }
