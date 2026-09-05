@@ -1,0 +1,37 @@
+# پایگاه داده توسعه کاوِنتادور.
+#
+# عمداً روی پورت ۵۴۳۴ است، نه ۵۴۳۲: تا با هر PostgreSQL دیگری که روی
+# این ماشین بالاست تداخل نکند. نشانی اتصال در `.env` هم همین را می‌گوید.
+#
+#   راه‌اندازی:  docker-compose up -d
+#   خاموش‌کردن:  docker-compose down
+#   پاک‌کردن کامل داده:  docker-compose down -v
+#
+# ⚠️ این فایل فقط برای توسعه است. رمز داخلش ساده و عمومی است و روی
+# سرور واقعی نباید استفاده شود.
+
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: kaventador_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kaventador
+      POSTGRES_PASSWORD: kaventador_dev
+      POSTGRES_DB: kaventador
+      # مرتب‌سازی و مقایسه متن فارسی درست کار کند
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    ports:
+      - "5434:5432"
+    volumes:
+      - kaventador_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kaventador -d kaventador"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  kaventador_pgdata:

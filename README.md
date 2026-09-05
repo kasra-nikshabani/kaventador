@@ -12,12 +12,21 @@
 
 ```bash
 npm install
-cp .env.example .env.local   # مقادیر را پر کنید
+cp .env.example .env
+docker-compose up -d      # PostgreSQL روی پورت ۵۴۳۴
+npm run db:migrate        # ساخت جدول‌ها
+npm run db:seed           # پرکردن از داده نمونه
 npm run dev
 ```
 
 سایت روی <http://localhost:3001> بالا می‌آید (پورت در
 `.claude/launch.json` تنظیم شده).
+
+### بدون دیتابیس
+
+اگر فقط می‌خواهید سایت را ببینید، `DATA_SOURCE=mock` بگذارید و مستقیم
+`npm run dev` بزنید. داده از حافظه خوانده می‌شود و با هر ری‌استارت به
+حالت اولیه برمی‌گردد — برای دمو خوب است، برای کار واقعی نه.
 
 ### حساب مدیر نمونه
 
@@ -35,7 +44,10 @@ npm run dev
 | `npm run typecheck` | بررسی نوع بدون تولید خروجی |
 | `npm run db:generate` | تولید کلاینت Prisma |
 | `npm run db:migrate` | اجرای مهاجرت دیتابیس |
-| `npm run db:seed` | پرکردن دیتابیس از داده نمونه |
+| `npm run db:seed` | پرکردن دیتابیس از داده نمونه (اول همه‌چیز را پاک می‌کند) |
+| `npm run db:studio` | مرورگر گرافیکی داده |
+| `docker-compose up -d` | بالا آوردن PostgreSQL |
+| `docker-compose down -v` | خاموش‌کردن و پاک‌کردن کامل داده |
 
 ## معماری در یک نگاه
 

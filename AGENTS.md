@@ -48,6 +48,19 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **تم روشن کلاس `light` دارد، نه «نبودِ `dark`».** برداشتن `dark` از
   `<html>` حالتی می‌سازد که اپ هرگز تولیدش نمی‌کند و سنجش رنگ را بی‌معنا
   می‌کند.
+- **Prisma 7 فایل `.env` را خودش نمی‌خواند.** `prisma migrate` با خطای
+  «datasource.url لازم است» می‌ایستد در حالی که `.env` سر جایش هست.
+  `prisma.config.ts` باید خودش `process.loadEnvFile()` بزند. همین برای
+  اسکریپت‌های `tsx` هم صادق است (`node --env-file=.env`).
+- **Prisma 7 بدون driver adapter کار نمی‌کند** — `@prisma/adapter-pg`
+  لازم است و `new PrismaClient()` خالی خطا می‌دهد.
+- **اسکریپت seed به `--conditions=react-server` نیاز دارد**، چون به
+  `hashPassword` می‌رسد و آن فایل `import "server-only"` دارد. این شرط
+  همان ماژول را به نسخه خالیِ خودِ بسته وصل می‌کند؛ نگهبان از کد
+  برداشته نمی‌شود.
+- **`@@unique([courseId, order])` جابه‌جایی ساده را می‌شکند.** دو UPDATE
+  پشت سر هم وسط راه دو ردیف با `order` یکسان می‌سازد و دیتابیس درست
+  خطا می‌دهد. راه‌حل: مرحله موقت با شماره منفی، داخل یک تراکنش.
 - **ورودی `type="file"` پنهان، نام دسترس‌پذیر می‌خواهد.** الگوی «input
   با `sr-only` + دکمه‌ای که `.click()` می‌زند» تخلف `label` می‌دهد؛
   `tabIndex={-1}` و `aria-label` لازم است. اگر داخل `dialog` بسته باشد،

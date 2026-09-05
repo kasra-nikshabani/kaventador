@@ -60,6 +60,20 @@ enum UserStatus {
   banned
 }
 
+/// نوع قیمت‌گذاری دوره.
+enum PricingType {
+  free
+  paid
+}
+
+/// وضعیت ثبت‌نام. دوره رایگان مستقیم `active` می‌شود؛ دوره پولی
+/// `awaiting_payment` می‌گیرد و درس‌هایش تا تأیید پرداخت قفل می‌ماند.
+enum EnrollmentStatus {
+  active
+  awaiting_payment
+  cancelled
+}
+
 // ─────────────────────────────────────────────────────────────
 //  محتوا
 // ─────────────────────────────────────────────────────────────
@@ -97,6 +111,10 @@ model Person {
 
   courses  Course[]
   articles Article[]
+
+  /// حسابی که این پروفایل عمومی به آن وصل است. دوره‌ها به `Person`
+  /// ارجاع می‌دهند نه `User`، و این پل بین آن دوست.
+  user User?
 }
 
 model Course {
@@ -117,6 +135,14 @@ model Course {
   level    Level
   status   ContentStatus  @default(draft)
   progress CourseProgress @default(completed)
+
+  /// قیمت‌گذاری. در دامنه یک شیء تودرتوست (`CoursePricing`) ولی در
+  /// جدول سه ستون تخت است — رابطه‌ای بودن یعنی همین. لایه ریپازیتوری
+  /// این دو شکل را به هم ترجمه می‌کند و قاعده «دوره پولی مبلغ دارد»
+  /// را همان‌جا نگه می‌دارد.
+  pricingType         PricingType @default(free)
+  priceAmount         Int?
+  priceOriginalAmount Int?
 
   /// تاریخ انتشار درس بعدی — فقط برای دوره در حال برگزاری معنا دارد.
   nextReleaseAt DateTime?
@@ -255,6 +281,11 @@ model User {
   joinedAt     DateTime  @default(now())
   lastActiveAt DateTime?
 
+  /// پروفایل عمومی — فقط حساب مدرس و مدیر دارد، دانشجو ندارد.
+  /// `onDelete: SetNull` تا حذف پروفایل، حساب را از بین نبرد.
+  personId String? @unique
+  person   Person? @relation(fields: [personId], references: [id], onDelete: SetNull)
+
   enrollments Enrollment[]
 
   @@index([role, status])
@@ -267,9 +298,17 @@ model Enrollment {
   userId   String
   courseId String
 
-  enrolledAt DateTime @default(now())
-  /// درصد پیشرفت دانشجو در دوره.
-  progress   Int      @default(0)
+  status     EnrollmentStatus @default(active)
+  enrolledAt DateTime         @default(now())
+
+  /// شناسه درس‌هایی که کاربر تمام کرده.
+  ///
+  /// ⚠️ درصد پیشرفت عمداً ستون ندارد و همیشه از روی همین آرایه محاسبه
+  /// می‌شود. اگر ذخیره‌اش کنیم، با افزودن یا حذف درس از سرفصل، عدد
+  /// ذخیره‌شده کهنه و گمراه‌کننده می‌ماند.
+  completedLessonIds String[]
+
+  lastAccessedAt DateTime?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

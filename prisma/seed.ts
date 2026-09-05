@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { articlesMock } from "../src/data/articles.mock";
 import { categoriesMock } from "../src/data/categories.mock";
@@ -13,10 +15,26 @@ import { hashPassword } from "../src/lib/auth/password";
  * دیتابیس منتقل می‌شود. شناسه‌ها هم عیناً حفظ می‌شوند تا ارجاع‌های
  * موجود (مثل `person-kasra` در اکشن ساخت مقاله) نشکنند.
  *
- * اسکریپت idempotent است: با `upsert` نوشته می‌شود، پس اجرای دوباره
- * داده تکراری نمی‌سازد.
+ * اسکریپت idempotent است: اول همه‌چیز پاک می‌شود و بعد از نو نوشته،
+ * پس اجرای دوباره داده تکراری نمی‌سازد.
+ *
+ * ⚠️ یعنی هر اجرا، تغییرهای ساخته‌شده در پنل را هم پاک می‌کند. این
+ * اسکریپت برای راه‌اندازی اولیه است، نه برای به‌روزرسانی.
  */
-const prisma = new PrismaClient();
+
+/* نه Prisma 7 و نه tsx فایل `.env` را خودشان نمی‌خوانند. */
+if (!process.env.DATABASE_URL && existsSync(".env")) {
+  process.loadEnvFile(".env");
+}
+
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL تنظیم نشده است.");
+}
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString }),
+});
 
 /** برچسب‌های یکتای همه دوره‌ها و مقالات. */
 function collectTagNames(): string[] {
@@ -86,6 +104,13 @@ async function main() {
         level: course.level,
         status: course.status,
         progress: course.progress,
+        pricingType: course.pricing.type,
+        priceAmount:
+          course.pricing.type === "paid" ? course.pricing.amount : null,
+        priceOriginalAmount:
+          course.pricing.type === "paid"
+            ? course.pricing.originalAmount ?? null
+            : null,
         nextReleaseAt: course.nextReleaseAt
           ? new Date(course.nextReleaseAt)
           : null,
@@ -184,11 +209,16 @@ async function main() {
         status: user.status,
         joinedAt: new Date(user.joinedAt),
         lastActiveAt: user.lastActiveAt ? new Date(user.lastActiveAt) : null,
+        personId: user.personId ?? null,
         enrollments: {
           create: user.enrollments.map((enrollment) => ({
             courseId: enrollment.courseId,
+            status: enrollment.status,
             enrolledAt: new Date(enrollment.enrolledAt),
-            progress: 0,
+            completedLessonIds: enrollment.completedLessonIds,
+            lastAccessedAt: enrollment.lastAccessedAt
+              ? new Date(enrollment.lastAccessedAt)
+              : null,
           })),
         },
       },
@@ -202,6 +232,7 @@ async function main() {
     درس: await prisma.lesson.count(),
     مقاله: await prisma.article.count(),
     کاربر: await prisma.user.count(),
+    ثبت‌نام: await prisma.enrollment.count(),
   };
 
   console.log("\n✓ داده اولیه نوشته شد:", counts);

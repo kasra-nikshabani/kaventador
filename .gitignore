@@ -51,3 +51,6 @@ next-env.d.ts
 
 # کلاینت تولیدشده Prisma — با `npx prisma generate` بازساخته می‌شود
 /src/generated
+
+# تنظیمات IDE
+.idea/

@@ -9,12 +9,13 @@
     "lint": "eslint",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "tsx prisma/seed.ts",
+    "db:seed": "tsx --conditions=react-server prisma/seed.ts",
     "db:studio": "prisma studio",
     "typecheck": "tsc --noEmit",
     "lint:strict": "eslint src --max-warnings=0"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.30.0",
